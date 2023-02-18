@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    {% if staff_added %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            New staff member added successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    {% endif %}
+
+    <form class="centered top" action="/add_new_staff" method="post">
+        <h2>Add New Staff Member</h2>
+
+        <label class="form-label">Enter Name</label>
+        <input name="name" type="text" placeholder="Name" autofocus autocomplete="off" class="form_class"><br>
+        <label class="form-label">Department</label>
+        <input name="department" type="text" placeholder="Department" autocomplete="off" class="form_class"><br>
+        <label class="form-label">Start Date</label>
+        <input name="start_date" type="date" placeholder="Start Date" autocomplete="off" class="form_class"><br>
+        <button class="btn btn-primary" type="submit" class="form_class">Add Staff Member</button>
+
+    </form>
+    <!-- Card -->
+    <!-- <div class="card text-center" style="width: 18rem;">
+        <img src="https://picsum.photos/200/300" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div> -->
+    <!-- <img alt="stock photo" src="https://picsum.photos/200/300" style="margin-right: auto; margin-left: auto;" class="centered"> -->
+
+
+{% endblock %}

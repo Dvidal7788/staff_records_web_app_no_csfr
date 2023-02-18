@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    {% if email_sent %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong> Success!</strong> The csv file you requested was sent to your e-mail!  <img src="static/images/send-green.svg" style="margin-bottom: 3px;">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
+    <!-- SELECT DEPARTMENT -->
+    <form class="centered top" action="/departments" method="post">
+        <h2>Departments</h2>
+        <select name="department" class="form-select top">
+            <option class="centered" disabled selected>SELECT DEPARTMENT</option>
+            <option value="all">All Departments</option>
+            <optgroup label="Departments">
+                {% for department in departments %}
+                    <option value="{{ department }}">{{ department }}</option>
+                {% endfor %}
+            </optgroup>
+        </select>
+        <br>
+        <!-- SORT BY -->
+        <!-- <label for="form">Sort</label> -->
+        <select name="sort_by" class="form-select form-select-sm top">
+            <option disabled selected>Sort By</option>
+            <option value="emp_id">Employee ID (default)</option>
+            <option value="name">Name</option>
+            <option value="department">Department</option>
+            <option value="start_date">Start Date</option>
+        </select>
+        <br>
+        <button type="submit" class="btn btn-primary top">Select Department</button>
+
+    <hr>
+    </form>
+
+    {% if display_results %}
+        <div>
+            <!-- Export as csv -->
+            <form action="/csv_export" method="post">
+                <div style="float: right">
+                    <input type="email" name="email" placeholder="Enter E-mail to receive csv" required>
+                    <button class="btn btn-secondary" style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .1rem; --bs-btn-font-size: .75rem; margin-right: 10px;">Export as CSV <img src="static/images/mail-offwhite.svg" style="margin-bottom: 3px;"></button>
+                    <!-- <button class="btn btn-secondary" style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .1rem; --bs-btn-font-size: .75rem; float: right; margin-right: 10px;">Export as CSV</button> -->
+                </div>
+            </form>
+            <small style="margin-left: 10px">Showing results for: '{{ department_selected }}' sorted by '{{ sort_by }}'</small>
+        </div>
+    {% endif %}
+
+    <!-- TABLE -->
+    <br>
+    <table class="table table-primary table-striped table-hover centered top">
+        <thead>
+            <th>Employee ID</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Start Date</th>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for person in staff %}
+                <tr>
+                    {% for key in person %}
+                        <td>{{ person[key] }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}
+
