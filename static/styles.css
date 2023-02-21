@@ -23,3 +23,24 @@
 .nav-hover: hover {
     background-color: '#ffffff';
 }
+
+/* #lookup_search_field {
+    background-image: url("static/images/search.svg");
+} */
+
+input {
+    /* text-indent: 20px; */
+    background-image: url();
+}
+
+.red {
+    color: #db0000;
+}
+
+.left {
+    margin-left: 10px;
+}
+
+.right {
+    margin-right: 10px;
+}

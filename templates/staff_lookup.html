@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+
+    <form class="centered top" action="/staff_lookup", method="post">
+        <h2>Staff Look Up <img src="static/images/search.svg" width="34" style="margin-bottom:5px"> </h2>
+
+        <!-- DROP DOWN MENU -->
+        <select name="column">
+            {% for column in columns %}
+                <option value="{{ column }}">{{ column }}</option>
+            {% endfor %}
+        </select>
+        <input name="search" type="text" placeholder="Search" style="background-image:"><br>
+        <button class="btn btn-primary top">Look Up</button>
+    </form>
+
+    {% if found %}
+    <hr>
+    <small class="left">{{ results}} Results matched your query.</small>
+    <br>
+        <table class="table table-primary centered">
+            <thead>
+                {% for column in columns %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </thead>
+            {% for employee in staff %}
+                <tr>
+                    {% for key in employee %}
+                        <td>{{ employee[key] }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

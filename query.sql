@@ -1,4 +1,4 @@
--- .schema
+.schema
 
 -- CREATE TABLE IF NOT EXISTS users (
 --     user_id INTEGER NOT NULL,
@@ -27,3 +27,13 @@ SELECT * FROM staff;
 
 -- DELETE FROM users;
 -- DELETE FROM staff;
+
+-------------------------
+-- BACKEND:
+-- DROP TABLE departments_sort;
+
+-- CREATE TABLE IF NOT EXISTS manager_pin (
+--     hash TEXT
+-- );
+
+-- SELECT * FROM manager_pin

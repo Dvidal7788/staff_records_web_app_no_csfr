@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    {% if not show_page2 and not show_page3 %}
+
+        <!-- Alert -->
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <img src="static/images/alert-triangle-orange.svg" style="margin-bottom: 3px"> Note: You must have a manager PIN to remove a staff member
+            <hr>
+            However, this is a demo. So, use PIN 0000 to try it out!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <h2 class="centered top">Remove Staff Member</h2>
+
+        <!-- Enter PIN -->
+        <form class="centered top" action="/remove_staff" method="post">
+
+            <div class="mb-3">
+                <label class="form-label">Enter PIN for access</label><br>
+                <input name="manager_pin" type="password" pattern="[0-9]{4}" maxlength="4"><br>
+                <input type="hidden" name="check_page1" value="True">
+                <button class="btn btn-primary" type="submit" class="form_class" style="margin-top: 20px;">Get Access</button>
+            </div>
+
+        </form>
+
+        <!-- Progress Bar -->
+        <br>
+        <br>
+        <div class="progress left right" role="progressbar" aria-label="Example with label" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%">0%</div>
+        </div>
+
+    {% elif show_page2 %}
+
+        <!-- Alert -->
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <img src="static/images/check-green.svg" style="margin-bottom: 3px"> PIN accepted. Access granted.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Remove staff form -->
+        <h2 class="centered top">Remove Staff Member</h2>
+        <form class="centered top" action="/remove_staff" method="post">
+            <div class="mb-3">
+                <label class="form-label">Employee Name</label><br>
+                <input name="name" type="text" placeholder="Name" autofocus autocomplete="off" class="form_class"><br>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Department</label><br>
+                <input name="department" type="text" placeholder="Department" autocomplete="off" class="form_class"><br>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Employee ID Number</label><br>
+                <input name="emp_id" type="text" placeholder="Employee ID Number" autocomplete="off" class="form_class"><br>
+            </div>
+                <input type="hidden" name="check_page2" value="True">
+                <button class="btn btn-danger" type="submit" class="form_class">Remove Staff Member</button>
+        </form>
+
+        <!-- Progress Bar -->
+        <br>
+        <br>
+        <div class="progress left right" role="progressbar" aria-label="Example with label" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 33%">33%</div>
+        </div>
+
+    {% elif show_page3 %}
+
+        <!-- FINAL WARNING -->
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <img src="static/images/alert-triangle-red.svg" style="margin-bottom: 3px"> Warning! You are going to delete this staff member from the staff database. ENTER YOUR MANAGER PIN ONCE MORE IF YOU WISH TO CONTINUE!
+            <hr>
+            However, this is a demo. So, use PIN 0000 to try it out!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <h2 class="centered top">Remove Staff Member</h2>
+        <h5 class="centered top">(LAST STEP)</h5>
+        <h5 class="centered top red">ARE YOU SURE YOU WANT TO REMOVE STAFF MEMBER?</h5>
+
+        <!-- Enter PIN -->
+        <form class="centered top" action="/remove_staff" method="post">
+
+            <div class="mb-3">
+                <label class="form-label">ENTER PIN TO CONFIRM</label><br>
+                <input name="manager_pin" type="password" pattern="[0-9]{4}" maxlength="4" placeholder="PIN"><br>
+                <input type="hidden" name="check_page3" value="True">
+                <button class="btn btn-danger" type="submit" class="form_class" style="margin-top: 20px;">REMOVE STAFF MEMBER</button>
+            </div>
+        </form>
+
+        <!-- Progress Bar -->
+        <br>
+        <br>
+        <div class="progress left right" role="progressbar" aria-label="Example with label" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 66%">66%</div>
+        </div>
+    {% endif %}
+
+{% endblock %}
