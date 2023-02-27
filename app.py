@@ -53,7 +53,7 @@ access = {}
 access['show_page2'] = False
 access['show_page3'] = False
 
-staff_columns = ['emp_id', 'name', 'department', 'start_date']
+staff_columns = ['emp_id', 'first_name', 'last_name', 'department', 'title', 'start_date']
 
 def login_required(f):
     # Decorate routes to require login.
@@ -100,7 +100,7 @@ def register():
             return render_template('error.html', message="Password Confirmation field left blank")
 
         # Make sure username is not already taken
-        db = sqlite3.connect("staff.db")
+        db = sqlite3.connect("backend.db")
         tmp_cursor = db.execute("SELECT username FROM users")
 
         for tmp_tuple in tmp_cursor:
@@ -168,7 +168,7 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        db = sqlite3.connect("staff.db")
+        db = sqlite3.connect("backend.db")
         tmp_cursor = db.execute("SELECT * FROM users WHERE username = ?", (username,))
 
         user_found = False
@@ -203,33 +203,35 @@ def logout():
 def add_new_staff():
     global staff_added
 
+    # Retreive departments
+    departments = get_departments()
+
+    departments = format_list(departments)
+
     # GET
     if request.method == 'GET':
         if staff_added:
             # Reset staff_added before rendering template
             staff_added = False
 
-            return render_template('add_new_staff.html', staff_added=True, username=session['username'])
+            return render_template('add_new_staff.html', departments=departments, staff_added=True, username=session['username'])
         else:
-            return render_template('add_new_staff.html', staff_added=False, username=session['username'])
+            return render_template('add_new_staff.html', departments=departments, staff_added=False, username=session['username'])
 
 
     # POST
     else:
-        name = request.form.get('name')
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
         department = request.form.get('department')
+        title = request.form.get('title')
+        salary = request.form.get('salary')
         start_date = request.form.get('start_date')
 
-        if not name and not department and not start_date:
-            return render_template('error.html', message="Form blank", username=session['username'])
-        elif not name:
-            return render_template('error.html', message="Please enter name of new staff member", username=session['username'])
-        elif not department:
-            return render_template('error.html', message="Please enter department", username=session['username'])
-        elif not start_date:
-            return render_template('error.html', message="Please enter start date", username=session['username'])
+        # Validate form
+        if not first_name or not last_name or not department or not title or not start_date:
+            return render_template('error.html', message="Missing information", username=session['username'])
 
-        print(start_date)
 
         # Get max emp_id
         db = sqlite3.connect("staff.db")
@@ -240,8 +242,9 @@ def add_new_staff():
             else:
                 new_id = tmp_tuple[0] + 1
 
-        cur = db.cursor()
-        cur.execute("INSERT INTO staff VALUES (?,?,?,?)", (new_id, name.lower(), department.lower(), start_date))
+        # cur = db.cursor()
+        db.execute("INSERT INTO staff VALUES (?,?,?,?,?,?)", (new_id, first_name.lower(), last_name.lower(), department.lower(), title.lower(), start_date))
+        db.execute("INSERT INTO salary VALUES (?, ?)", (new_id, salary))
         db.commit()
 
         staff_added = True
@@ -265,45 +268,56 @@ def departments():
     global export_criteria
     global email_sent
 
-    # Retrieve departments from database
-    db = sqlite3.connect("staff.db")
-    tmp_cursor = db.execute("SELECT DISTINCT(department) FROM staff")
-    departments = []
-    for tmp_tuple in tmp_cursor:
-        departments.append(tmp_tuple[0].title())
+    # Retrieve department list
+    departments = get_departments()
+    departments = format_list(departments)
 
-    departments.sort()
+    columns = format_list(staff_columns)
 
     # GET
     if request.method == 'GET' and not departments_all:
         if email_sent:
             email_sent = False
-            return render_template('departments.html', departments=departments, username=session['username'], email_sent=True)
+            return render_template('departments.html', departments=departments, columns=columns, username=session['username'], email_sent=True)
         else:
-            return render_template('departments.html', departments=departments, username=session['username'], email_sent=False)
+            return render_template('departments.html', departments=departments, columns=columns, username=session['username'], email_sent=False)
 
     # POST
     elif request.method == 'POST' or departments_all:
+
+        # Retreive form
         department = request.form.get('department')
+        sort_by = request.form.get('sort_by')
+
         if departments_all:
             department = 'all'
             departments_all = False
 
         # SQL
-        staff = access_sql_db(department)
+        staff = access_staff_sql(deformat_str(department, False))
 
         # Sort
-        sort_by = request.form.get('sort_by')
         if sort_by:
-            staff.sort(key=lambda x: x[sort_by])
+            staff.sort(key=lambda x: x[deformat_str(sort_by, True)])
         else:
-            sort_by = 'emp_id'
+            sort_by = 'Employee ID'
+
+        # Format staff
+        for i in range(len(staff)):
+            staff[i] = format_dict(staff[i])
 
         # Update export criteria
         export_criteria.department = department
         export_criteria.sort_by = sort_by
 
-        return render_template('departments.html', departments=departments, staff=staff, department_selected=department, sort_by=sort_by, display_results=True, username=session['username'])
+        # Results
+        results = {}
+        results['department_selected'] = department
+        results['sort_by'] = sort_by
+        results['num_of_results'] = len(staff)
+
+
+        return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, sort_by=sort_by, display_results=True, username=session['username'])
 
 
 @app.route("/csv_export", methods=['POST'])
@@ -313,7 +327,7 @@ def csv_export():
     global email_sent
 
     # Retrieve info from database
-    staff = access_sql_db(export_criteria.department)
+    staff = access_staff_sql(export_criteria.department)
 
     # Create filename
     filename = f'{export_criteria.department}_{datetime.now()}.csv'
@@ -350,7 +364,7 @@ def csv_export():
     if export_criteria.department != 'all':
         message.body = f"Here is the csv file you requested of:\nThe '{export_criteria.department}' Department sorted by '{export_criteria.sort_by}'."
     else:
-        message.body = f"Here is the csv file you requested of:\n'{export_criteria.department} departments' sorted by '{export_criteria.sort_by}'."
+        message.body = f"Here is the csv file you requested of:\n'All departments' sorted by '{export_criteria.sort_by}'."
 
     # Attach
     with app.open_resource(filename) as csv_fp:
@@ -369,7 +383,7 @@ def csv_export():
 
 
 
-def access_sql_db(department):
+def access_staff_sql(department):
 
     # Retrieves info from selected department
         db = sqlite3.connect("staff.db")
@@ -381,7 +395,10 @@ def access_sql_db(department):
 
         staff = []
         for tmp_tuple in tmp_cursor:
-            staff.append({'emp_id': tmp_tuple[0], 'name': tmp_tuple[1].title(), 'department': tmp_tuple[2].title(), 'start_date': tmp_tuple[3]})
+            tmp_dict = {}
+            for i in range(len(staff_columns)):
+                tmp_dict[staff_columns[i]] = tmp_tuple[i]
+            staff.append(tmp_dict)
 
         # Return list of dicts
         return staff
@@ -507,10 +524,7 @@ def remove_staff():
 def staff_lookup():
 
     # Format column names for better readability
-    columns = []
-    for column in staff_columns:
-        tmp = column.replace('_', ' ')
-        columns.append(tmp.replace('emp ', 'employee ').title().replace('Id', 'ID'))
+    columns = format_list(staff_columns)
 
     # GET
     if request.method == 'GET':
@@ -520,33 +534,179 @@ def staff_lookup():
     # POST
     else:
         column = request.form.get('column')
-        search = '%' + request.form.get('search') + '%'
+        search = request.form.get('search')
 
-        # Create SQL query string because can not use column as ? since it should not be a type string
-        query = f'SELECT * FROM staff WHERE {staff_columns[columns.index(column)]} LIKE ?'
+        # SQL
+        staff = access_staff_sql_like(column, search)
 
-        db = sqlite3.connect("staff.db")
-        tmp_cursor = db.execute(query, (search,))
+        results = {}
+        results['num_of_results'] = len(staff)
+        results['column'] = format_str(column)
+        results['search'] = search.replace('%', '')
 
-        staff = []
-        results = 0
-        staff_found = False
-        for tmp_tuple in tmp_cursor:
-            staff_found = True
-            tmp_dict = {}
-            i = 0
-            for column in columns:
-                if type(tmp_tuple[i]) == str:
-                    tmp_dict[column] = tmp_tuple[i].title()
-                else:
-                    tmp_dict[column] = tmp_tuple[i]
-                i += 1
-            staff.append(tmp_dict)
-            results += 1
-            print(staff)
-
-        if staff_found:
+        if len(staff) > 0:
             return render_template('staff_lookup.html', columns=columns, found=True, staff=staff, results=results, username=session['username'])
 
-        return render_template('error.html', message="No Results")
+        return render_template('staff_lookup.html', columns=columns, no_results=True, results=results, username=session['username'])
+
+@app.route("/edit_staff", methods=['GET', 'POST'])
+@login_required
+def edit_staff():
+    global staff
+    global edit_info
+
+    columns = format_list(staff_columns)
+
+    # GET
+    if request.method == 'GET':
+        return render_template('edit_staff.html', columns=columns, first_page=True, username=session['username'])
+
+    # POST
+    else:
+
+        # EDIT STAFF MEMBER
+        if request.form.get('confirm_edit') == 'yes':
+
+            # Edit info - set up query (column names don't work with ? placeholder)
+            query = f"UPDATE staff SET {edit_info['column_to_edit']} = ? WHERE emp_id = ?"
+
+            db = sqlite3.connect("staff.db")
+            try:
+                db.execute(query, (deformat_str(edit_info['new_value'], False), edit_info['emp_id']))
+                db.commit()
+            except sqlite3.IntegrityError:
+                return render_template('edit_staff.html', columns=columns, datatype_mismatch=True, first_page=True, username=session['username'])
+
+            staff.clear()
+            edit_info.clear()
+
+            return render_template('edit_staff.html', columns=columns, staff_edited=True, first_page=True, username=session['username'])
+
+        elif request.form.get('confirm_edit') == 'no':
+            return redirect('/edit_staff')
+
+
+        # -- Page 3 --
+        elif request.form.get('column_to_edit') and request.form.get('new_value') and request.form.get('emp_id'):
+
+            edit_info = {}
+            edit_info['column_to_edit'] = request.form.get('column_to_edit')
+            edit_info['new_value'] = request.form.get('new_value')
+            edit_info['emp_id'] = request.form.get('emp_id')
+
+            print('\n\nEDIT_INFO: ', edit_info, '\n\n')
+
+            message2 = f"Employee ID: {edit_info['emp_id']}'s {format_str(edit_info['column_to_edit'])} to '{edit_info['new_value']}'?"
+            return render_template('confirmation.html', message=f"Are you sure you want to edit:", message2=message2)
+
+        # -- Page 2 --
+        elif request.form.get('person_to_edit_emp_id'):
+
+            # Get full dict of person to edit
+            for person in staff:
+                if person['emp_id'] == int(request.form.get('person_to_edit_emp_id')):
+                    person_to_edit = person
+
+            return render_template('edit_staff2.html', columns=columns, person_to_edit=person_to_edit, username=session['username'])
+
+
+        else:
+
+            # -- Page 1 --
+            # Retrieve form
+            column = request.form.get('column')
+            search = request.form.get('search')
+
+            # SQL
+            staff = access_staff_sql_like(column, search)
+
+            results = {}
+            results['num_of_results'] = len(staff)
+            results['column'] = format_str(column)
+            results['search'] = search.replace('%', '')
+
+            if len(staff) > 0:
+                return render_template('edit_staff.html', columns=columns, found=True, staff=staff, results=results, username=session['username'])
+
+            return render_template('edit_staff.html', columns=columns, no_results=True, staff=staff, results=results, username=session['username'])
+
+
+# UTILITY FUNCTIONS
+def get_departments():
+    db = sqlite3.connect("staff.db")
+    tmp_cursor = db.execute("SELECT department FROM departments")
+
+    departments = []
+    for tmp_tuple in tmp_cursor:
+        departments.append(tmp_tuple[0])
+
+    departments.sort
+
+    return departments
+
+
+def format_list(input_list):
+
+    formatted_list = []
+    for item in input_list:
+        if type(item) == str:
+            item = format_str(item)
+
+        formatted_list.append(format_str(item))
+
+    return formatted_list
+
+def format_dict(input_dict):
+
+    formatted_dict = {}
+    for key in input_dict:
+        if type(input_dict[key]) == str:
+            formatted_dict[key] = format_str(input_dict[key])
+        else:
+            formatted_dict[key] = input_dict[key]
+
+    return formatted_dict
+
+
+
+def format_str(input_str):
+    if type(input_str) == str:
+        return input_str.replace('_', ' ').title().replace('Emp ', 'Employee ').replace('It', 'IT').replace('Id', 'ID').replace('Of ', 'of ')
+    return input_str
+
+
+def deformat_str(input_str, is_column_name):
+    # For fields in tables, the only deformatting that is necessary is .lower(), however this function gets rid of need for if statement in other functions for if type == str
+    if type(input_str) == str:
+
+        # Column names formatted with '_' replacing space
+        if is_column_name:
+            return input_str.lower().replace(' ', '_').replace('employee', 'emp')
+        else:
+            return input_str.lower()
+    return input_str
+
+
+def access_staff_sql_like(column, search):
+
+    # Create SQL query string because can not use column as ? since it should not be a type string
+    query = f'SELECT * FROM staff WHERE {deformat_str(column, True)} LIKE ?'
+
+    db = sqlite3.connect("staff.db")
+    tmp_cursor = db.execute(query, (f'%{search}%',))
+
+    staff = []
+    for tmp_tuple in tmp_cursor:
+        tmp_dict = {}
+        for i in range(len(staff_columns)):
+            if type(tmp_tuple[i]) == str:
+                tmp_dict[deformat_str(staff_columns[i], True)] = tmp_tuple[i].title()
+            else:
+                tmp_dict[deformat_str(staff_columns[i], True)] = tmp_tuple[i]
+
+        staff.append(tmp_dict)
+
+    # Return list of dicts
+    return staff
+
 

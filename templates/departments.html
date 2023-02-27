@@ -25,10 +25,9 @@
         <!-- <label for="form">Sort</label> -->
         <select name="sort_by" class="form-select form-select-sm top">
             <option disabled selected>Sort By</option>
-            <option value="emp_id">Employee ID (default)</option>
-            <option value="name">Name</option>
-            <option value="department">Department</option>
-            <option value="start_date">Start Date</option>
+            {% for column in columns %}
+                <option name="sort_by" value="{{ column }}">{{ column }}</option>
+            {% endfor %}
         </select>
         <br>
         <button type="submit" class="btn btn-primary top">Select Department</button>
@@ -46,7 +45,12 @@
                     <!-- <button class="btn btn-secondary" style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .1rem; --bs-btn-font-size: .75rem; float: right; margin-right: 10px;">Export as CSV</button> -->
                 </div>
             </form>
-            <small class="left">Showing results for: '{{ department_selected }}' sorted by '{{ sort_by }}'</small>
+            {% if results['department_selected'] == 'all' %}
+                <small class="left">Showing results for: 'All Departments' sorted by '{{ results['sort_by'] }}'</small><br>
+            {% else %}
+                <small class="left">Showing results for: '{{ results['department_selected'] }}' sorted by '{{ results['sort_by'] }}'</small><br>
+            {% endif %}
+            <small class="left">Results: {{ results['num_of_results'] }}</small>
         </div>
     {% endif %}
 
@@ -54,10 +58,9 @@
     <br>
     <table class="table table-primary table-striped table-hover centered top">
         <thead>
-            <th>Employee ID</th>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Start Date</th>
+            {% for column in columns %}
+            <th>{{column}}</th>
+            {% endfor %}
         </thead>
         <tbody class="table-group-divider">
             {% for person in staff %}

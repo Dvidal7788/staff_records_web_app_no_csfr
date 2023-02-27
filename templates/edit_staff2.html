@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <!-- Header -->
+    <h2 class="centered top">Edit Staff Member <img src="static/images/edit.svg" width="34" style="margin-bottom:5px"> </h2>
+    <hr>
+
+    <small class="left">Page 3 of 3</small>
+    <h6 class="centered bottom"><b>Last:</b> Choose the item you wish to edit</h6>
+
+    <!-- Edit This Person Table -->
+    <hr>
+    <br><br>
+    <form action="/edit_staff" method="post">
+        <table class="table table-primary centered">
+            <thead>
+                {% for column in columns %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </thead>
+            <tbody>
+                <tr>
+                    {% for key in person_to_edit %}
+                        <td><input name="column_to_edit" type="radio" value="{{ key }}"> {{ person_to_edit[key] }}</td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="centered top">
+            <input name="new_value" type="text" placeholder="Enter new value here" required><br>
+            <input name="emp_id" type="hidden" value="{{ person_to_edit['emp_id'] }}">
+            <button class="btn btn-success top" type="submit">Edit Staff Member</button>
+        </div>
+    </form>
+
+{% endblock %}

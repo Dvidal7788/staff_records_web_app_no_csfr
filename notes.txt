@@ -6,3 +6,8 @@ require admin pin
 export as pdf or excel spreadsheet
 create new email to send csvs
 keep table on page after email sent
+
+------
+Departments: error if choose sort by without department
+
+Edit multiple fields for staff edit 

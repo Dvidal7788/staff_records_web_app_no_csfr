@@ -2,9 +2,22 @@
 
 {% block main %}
 
+    <!-- Alert -->
+    {% if no_results %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            No results matched your query for '{{ results['search'] }}' in {{ results['column'] }}.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
+    <!-- Header -->
+    <div class="centered top">
+        <h2>Staff Look Up <img src="static/images/search.svg" width="34" style="margin-bottom:5px"> </h2>
+        <small>This search allows you to type in <i>partial information</i> and we will find all that match!</small>
+    </div>
+
 
     <form class="centered top" action="/staff_lookup", method="post">
-        <h2>Staff Look Up <img src="static/images/search.svg" width="34" style="margin-bottom:5px"> </h2>
 
         <!-- DROP DOWN MENU -->
         <select name="column">
@@ -17,22 +30,26 @@
     </form>
 
     {% if found %}
-    <hr>
-    <small class="left">{{ results}} Results matched your query.</small>
-    <br>
+        <!-- Results -->
+        <hr>
+        <small class="left">{{ results['num_of_results'] }} Results matched your query for '{{ results['search'] }}' in {{ results['column'] }}.</small>
+        <br>
+        <!-- Table of results -->
         <table class="table table-primary centered">
             <thead>
                 {% for column in columns %}
                     <th>{{ column }}</th>
                 {% endfor %}
             </thead>
-            {% for employee in staff %}
-                <tr>
-                    {% for key in employee %}
-                        <td>{{ employee[key] }}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
+            <tbody>
+                {% for employee in staff %}
+                    <tr>
+                        {% for key in employee %}
+                            <td>{{ employee[key] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
     {% endif %}
 {% endblock %}

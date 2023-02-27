@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+
+    <!-- Alerts -->
+    {% if no_results %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            No results matched your query for '{{ results['search'] }}' in {{ results['column'] }}.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% elif staff_edited %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Staff member successfully edited! <img src="static/images/check-circle-green.svg" style="margin-bottom:5px">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% elif datatype_mismatch %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <img src="static/images/alert-triangle-red.svg" style="margin-bottom:5px"><strong>You entered the wrong data type</strong> (i.e. you entered letters when you should have entered numbers or vice versa!)
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
+    <!-- Header -->
+
+    <h2 class="centered top">Edit Staff Member <img src="static/images/edit.svg" width="34" style="margin-bottom:5px"> </h2>
+    <hr>
+    {% if first_page %}
+        <small class="left">Page 1 of 3</small>
+        <div class="centered">
+            <h6><b>First:</b> Look Up Staff Member  <img src="static/images/search.svg" width="24" style="margin-bottom:5px"></h6>
+            <small>This search allows you to type in <i>partial information</i> and we will find all that match!</small>
+        </div>
+    {% else %}
+        <small class="left">Page 2 of 3</small>
+        <h6 class="centered bottom"><b>Second:</b> Choose the staff member you wish to edit</h6>
+    {% endif %}
+
+    <!-- Look Up -->
+    <br>
+    <form class="centered top" action="/edit_staff", method="post">
+
+        <!-- DROP DOWN MENU -->
+        <select name="column">
+            {% for column in columns %}
+                <option value="{{ column }}">{{ column }}</option>
+            {% endfor %}
+        </select>
+        <input name="search" type="text" placeholder="Search" style="background-image:"><br>
+        <button class="btn btn-primary top">Look Up</button>
+    </form>
+
+
+    <!-- Table of results -->
+    {% if found %}
+        <hr>
+        <small class="left">{{ results['num_of_results'] }} Results matched your query for '{{ results['search'] }}' in {{ results['column'] }}.</small>
+        <br><br>
+        <form action="/edit_staff", method="post">
+            <table class="table table-primary centered">
+                <thead>
+                    <th>Edit</th>
+                    {% for column in columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </thead>
+                <tbody>
+                    {% for employee in staff %}
+                        <tr>
+                            <td><input name="person_to_edit_emp_id" type="radio" value="{{ employee['emp_id'] }}"></td>
+                            {% for key in employee %}
+                                <td>{{ employee[key] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="centered top">
+                <button class="btn btn-success" type="submit">Edit this Person</button>
+            </div>
+        </form>
+    {% endif %}
+
+
+{% endblock %}
