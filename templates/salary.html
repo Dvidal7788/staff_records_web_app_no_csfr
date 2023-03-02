@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <!-- Header -->
+    <div class="centered top">
+        <h2>Salaries </h2>
+        <!-- <small>This search allows you to type in <i>partial information</i> and we will find all that match!</small> -->
+    </div>
+
+
+    <!-- Table -->
+    <table class="table table-primary table-hover centered top">
+        <thead>
+            {% for column in columns %}
+                {% if column == 'Salary' %}
+                    <th style="background-color: #eeeeee; color: #559055;">{{ column }}</th>
+                {% else %}
+                    <th>{{ column }}</th>
+                {% endif %}
+            {% endfor %}
+        </thead>
+        <tbody class="table-group-divider">
+            {% for person in staff %}
+                <tr>
+                    {% for key in person %}
+                        {% if key == 'Salary' %}
+                            <td style="background-color: #eeeeee; color: #559055;">{{ person[key] }}</td>
+                        {% else %}
+                            <td>{{ person[key] }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

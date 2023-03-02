@@ -4,10 +4,21 @@ logged in as.. DONE
 remove staff
 require admin pin
 export as pdf or excel spreadsheet
-create new email to send csvs
+create new email to send csvs DONE
 keep table on page after email sent
 
 ------
-Departments: error if choose sort by without department
+Departments: error if choose sort by without department DONE
 
-Edit multiple fields for staff edit 
+Edit multiple fields for staff edit
+
+format_str now formats list of dicts DONE
+registration takes you to log in page DONE
+export shows ascending/descending DONE
+now uses sha512 DONE
+
+staff_columns retreives column names from db DONE
+
+
+sqlite3.IntegrityError
+edit_staff rejects wrong SQL datatype DONE for int but DATE datatype still accepts string for some reason

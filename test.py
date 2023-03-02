@@ -22,11 +22,11 @@
 
 # import sqlite3
 
-# print(generate_password_hash('0000'))
+# # print(generate_password_hash('0000', method='pbkdf2:sha512'))
 
 # db = sqlite3.connect("backend.db")
-# # cur = db.cursor()
-# db.execute("INSERT INTO manager_pin VALUES (?)", (generate_password_hash('0000'),))
+# # # # cur = db.cursor()
+# db.execute("INSERT INTO manager_pin VALUES (?)", (generate_password_hash('0000', method='pbkdf2:sha512'),))
 # db.commit()
 
 
@@ -42,3 +42,24 @@
 # access_granted = remove_staff_pg2 = True
 
 # print(access_granted, remove_staff_pg2)
+
+
+
+# # GET COLUMN NAMES
+# import sqlite3
+
+# db = sqlite3.connect("staff.db")
+
+# # tmp_cursor = db.execute("SELECT sql FROM sqlite_master WHERE tbl_name = 'staff' AND type = 'table'")
+# # tmp_cursor = db.execute("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('staff')")
+
+
+# # tmp_cursor = db.execute("PRAGMA table_info('staff')")
+# tmp_cursor = db.execute("SELECT name FROM pragma_table_info('staff')")
+# # db.commit()
+
+# # tmp_cursor = d
+
+# # print(tmp_cursor)
+# for item in tmp_cursor:
+#     print(item[0])

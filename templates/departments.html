@@ -6,6 +6,22 @@
             <strong> Success!</strong> The csv file you requested was sent to your e-mail!  <img src="static/images/send-green.svg" style="margin-bottom: 3px;">
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+
+    {% elif departments_blank %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            You chose a sort criteria, but did not choose a department to sort!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% elif landing_page %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            Choose a deparment... (and also sort criteria if you wish)
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% elif form_blank %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            You must choose a deparment!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     {% endif %}
 
     <!-- SELECT DEPARTMENT -->
@@ -26,7 +42,11 @@
         <select name="sort_by" class="form-select form-select-sm top">
             <option disabled selected>Sort By</option>
             {% for column in columns %}
-                <option name="sort_by" value="{{ column }}">{{ column }}</option>
+                {% if column == 'Employee ID' %}
+                    <option name="sort_by" value="{{ column }}">{{ column }} (Default)</option>
+                {% else %}
+                    <option name="sort_by" value="{{ column }}">{{ column }}</option>
+                {% endif %}
             {% endfor %}
         </select>
         <br>
@@ -45,12 +65,14 @@
                     <!-- <button class="btn btn-secondary" style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .1rem; --bs-btn-font-size: .75rem; float: right; margin-right: 10px;">Export as CSV</button> -->
                 </div>
             </form>
-            {% if results['department_selected'] == 'all' %}
-                <small class="left">Showing results for: 'All Departments' sorted by '{{ results['sort_by'] }}'</small><br>
+            {% if results.department == 'all' %}
+                <small class="left">Showing results for: <b>'All Departments'</b> sorted by <b>'{{ results.sort_by }}'</b> ({{ results.asc_desc }})
+                </small><br>
             {% else %}
-                <small class="left">Showing results for: '{{ results['department_selected'] }}' sorted by '{{ results['sort_by'] }}'</small><br>
+                <small class="left">Showing results for: <b>'{{ results.department }}'</b> sorted by <b>'{{ results.sort_by }}'</b> ({{ results.asc_desc }})
+                </small><br>
             {% endif %}
-            <small class="left">Results: {{ results['num_of_results'] }}</small>
+            <small class="left">Results: {{ results.num_of_results }}</small>
         </div>
     {% endif %}
 
@@ -59,7 +81,12 @@
     <table class="table table-primary table-striped table-hover centered top">
         <thead>
             {% for column in columns %}
-            <th>{{column}}</th>
+                <form action="/departments" method="post">
+                    <th>{{column}}
+                        <input name="resort_by" type="hidden" value="{{ column }}">
+                        <button name="asc_desc" value="ascending" class="btn btn-light" style="--bs-btn-padding-y: .005rem; --bs-btn-padding-x: .05rem; --bs-btn-font-size: .75rem; margin-bottom:5px">&#8593</button><button name="asc_desc" value="descending" class="btn btn-light" style="--bs-btn-padding-y: .005rem; --bs-btn-padding-x: .05rem; --bs-btn-font-size: .75rem; margin-bottom:5px">&#8595</button>
+                    </th>
+                </form>
             {% endfor %}
         </thead>
         <tbody class="table-group-divider">

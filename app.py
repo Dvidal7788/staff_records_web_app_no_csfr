@@ -15,9 +15,9 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 # Configure e-mail
-app.config['MAIL_DEFAULT_SENDER'] = 'dvidal7788@gmail.com'
-app.config['MAIL_USERNAME'] = 'dvidal7788@gmail.com'
-app.config['MAIL_PASSWORD'] = 'oxbbivllbzottirw'
+app.config['MAIL_DEFAULT_SENDER'] = 'staffrecordsdatabase@gmail.com'
+app.config['MAIL_USERNAME'] = 'staffrecordsdatabase@gmail.com'
+app.config['MAIL_PASSWORD'] = 'pjqvksurkccnhsbj'
 app.config['MAIL_PORT'] = 587 # TCP port
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_USE_TLS'] = True # Use encryption
@@ -25,10 +25,12 @@ app.config['MAIL_USE_SSL'] = False
 mail = Mail(app)
 
 
-class ExportCriteria():
-    def __init__(self, department, sort_by):
+class Results():
+    def __init__(self, department, sort_by, num_of_results, asc_desc):
         self.department = department
         self.sort_by = sort_by
+        self.num_of_results = num_of_results
+        self.asc_desc = asc_desc
 
 class RemoveStaff():
     def __init__(self, emp_id, name, department):
@@ -44,7 +46,7 @@ class RemoveStaff():
 
 
 # Globals
-export_criteria = ExportCriteria('all', 'emp_id')
+# export_criteria = ExportCriteria('all', 'emp_id')
 departments_all = False
 staff_added = False
 email_sent = False
@@ -52,8 +54,18 @@ employee_to_remove = RemoveStaff(-1, 'NULL', 'NULL')
 access = {}
 access['show_page2'] = False
 access['show_page3'] = False
+# global registration_success
+registration_success = False
 
-staff_columns = ['emp_id', 'first_name', 'last_name', 'department', 'title', 'start_date']
+# Retrieve up to date staff column names
+db = sqlite3.connect("sql/staff.db")
+tmp_cursor = db.execute("SELECT name FROM PRAGMA_TABLE_INFO('staff')")
+staff_columns = []
+for tmp_tuple in tmp_cursor:
+    staff_columns.append(tmp_tuple[0])
+
+
+# staff_columns = ['emp_id', 'first_name', 'last_name', 'department', 'title', 'start_date']
 
 def login_required(f):
     # Decorate routes to require login.
@@ -100,7 +112,7 @@ def register():
             return render_template('error.html', message="Password Confirmation field left blank")
 
         # Make sure username is not already taken
-        db = sqlite3.connect("backend.db")
+        db = sqlite3.connect("sql/backend.db")
         tmp_cursor = db.execute("SELECT username FROM users")
 
         for tmp_tuple in tmp_cursor:
@@ -150,10 +162,14 @@ def register():
                 new_id = tmp_tuple[0] + 1
 
         cur = db.cursor()
-        cur.execute("INSERT INTO users VALUES(?,?,?)", (new_id, username, generate_password_hash(password)))
+        cur.execute("INSERT INTO users VALUES(?,?,?)", (new_id, username, generate_password_hash(password, method='pbkdf2:sha512')))
         db.commit()
 
-        return render_template('success.html', message='Registration Successful!', message2='You may now log in.')
+        global registration_success
+        registration_success = True
+
+        return redirect("/login")
+        # return render_template('success.html', message='Registration Successful!', message2='You may now log in.')
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -161,14 +177,23 @@ def login():
 
     # GET
     if request.method == 'GET':
-        return render_template('login.html')
+
+        # Show registration success alert or not
+        global registration_success
+
+        if registration_success:
+            registration_success = False
+            return render_template('login.html', registration_success=True)
+
+        return render_template('login.html', registration_success=False)
+
 
     # POST
     else:
         username = request.form.get('username')
         password = request.form.get('password')
 
-        db = sqlite3.connect("backend.db")
+        db = sqlite3.connect("sql/backend.db")
         tmp_cursor = db.execute("SELECT * FROM users WHERE username = ?", (username,))
 
         user_found = False
@@ -234,7 +259,7 @@ def add_new_staff():
 
 
         # Get max emp_id
-        db = sqlite3.connect("staff.db")
+        db = sqlite3.connect("sql/staff.db")
         tmp_cursor = db.execute("SELECT MAX(emp_id) FROM staff")
         for tmp_tuple in tmp_cursor:
             if tmp_tuple[0] == None:
@@ -267,6 +292,8 @@ def departments():
     global departments_all
     global export_criteria
     global email_sent
+    global staff
+    global results
 
     # Retrieve department list
     departments = get_departments()
@@ -280,15 +307,38 @@ def departments():
             email_sent = False
             return render_template('departments.html', departments=departments, columns=columns, username=session['username'], email_sent=True)
         else:
-            return render_template('departments.html', departments=departments, columns=columns, username=session['username'], email_sent=False)
+            return render_template('departments.html', departments=departments, columns=columns, landing_page=True, username=session['username'], email_sent=False)
 
     # POST
     elif request.method == 'POST' or departments_all:
+
+        # Check if asc/desc
+        if request.form.get('asc_desc'):
+
+            asc_desc = request.form.get('asc_desc')
+            results.sort_by = request.form.get('resort_by')
+            results.asc_desc = asc_desc
+
+            # Resort
+            if asc_desc == 'ascending':
+                staff.sort(key=lambda x: x[deformat_str(results.sort_by, True)])
+            else:
+                staff.sort(key=lambda x: x[deformat_str(results.sort_by, True)], reverse=True)
+
+            return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'])
+
 
         # Retreive form
         department = request.form.get('department')
         sort_by = request.form.get('sort_by')
 
+        # Validate form
+        if sort_by and not department:
+            return render_template('departments.html', departments_blank=True, departments=departments, columns=columns, username=session['username'])
+        elif not department and not sort_by and not departments_all:
+            return render_template('departments.html', form_blank=True, departments=departments, columns=columns, username=session['username'])
+
+        # All
         if departments_all:
             department = 'all'
             departments_all = False
@@ -306,36 +356,45 @@ def departments():
         for i in range(len(staff)):
             staff[i] = format_dict(staff[i])
 
-        # Update export criteria
-        export_criteria.department = department
-        export_criteria.sort_by = sort_by
+        # # Update export criteria
+        # export_criteria.department = deformat_str(department, False)
+        # export_criteria.sort_by = deformat_str(sort_by, True)
 
         # Results
-        results = {}
-        results['department_selected'] = department
-        results['sort_by'] = sort_by
-        results['num_of_results'] = len(staff)
+        results = Results(department, sort_by, len(staff), 'ascending')
+        # results['department_selected'] = department
+        # results['sort_by'] = sort_by
+        # results['num_of_results'] = len(staff)
 
-
-        return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, sort_by=sort_by, display_results=True, username=session['username'])
+        return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'])
 
 
 @app.route("/csv_export", methods=['POST'])
 @login_required
 def csv_export():
-    global export_criteria
+    # global export_criteria
     global email_sent
 
     # Retrieve info from database
-    staff = access_staff_sql(export_criteria.department)
+    staff = access_staff_sql(deformat_str(results.department, False))
+
+    # Sort
+    if results.asc_desc == 'ascending':
+        staff.sort(key=lambda x: x[deformat_str(results.sort_by, True)])
+    else:
+        staff.sort(key=lambda x: x[deformat_str(results.sort_by, True)], reverse=True)
+
+    # Format
+    staff = format_list(staff)
 
     # Create filename
-    filename = f'{export_criteria.department}_{datetime.now()}.csv'
+    filename = f'{deformat_str(results.department, False)}_{datetime.now()}.csv'
 
     # Create list of columns
-    columns = []
-    for key in staff[0]:
-        columns.append(key)
+    columns = staff_columns
+    # columns = []
+    # for key in staff[0]:
+    #     columns.append(key)
 
     num_of_columns = len(columns)
     # Write to new csv file
@@ -361,10 +420,10 @@ def csv_export():
     email = request.form.get('email')
     message = Message('The csv file you requested', recipients=[email])
 
-    if export_criteria.department != 'all':
-        message.body = f"Here is the csv file you requested of:\nThe '{export_criteria.department}' Department sorted by '{export_criteria.sort_by}'."
+    if results.department != 'all':
+        message.body = f"Here is the csv file you requested of:\n\nThe '{results.department}' Department sorted by '{results.sort_by}' ({results.asc_desc})."
     else:
-        message.body = f"Here is the csv file you requested of:\n'All departments' sorted by '{export_criteria.sort_by}'."
+        message.body = f"Here is the csv file you requested of:\n\n'All departments' sorted by '{results.sort_by}'."
 
     # Attach
     with app.open_resource(filename) as csv_fp:
@@ -381,27 +440,6 @@ def csv_export():
 
     return redirect("/departments")
 
-
-
-def access_staff_sql(department):
-
-    # Retrieves info from selected department
-        db = sqlite3.connect("staff.db")
-
-        if department == 'all':
-            tmp_cursor = db.execute("SELECT * FROM staff")
-        else:
-            tmp_cursor = db.execute("SELECT * FROM staff WHERE department = ?", (department,))
-
-        staff = []
-        for tmp_tuple in tmp_cursor:
-            tmp_dict = {}
-            for i in range(len(staff_columns)):
-                tmp_dict[staff_columns[i]] = tmp_tuple[i]
-            staff.append(tmp_dict)
-
-        # Return list of dicts
-        return staff
 
 @app.route("/remove_staff", methods=['GET', 'POST'])
 def remove_staff():
@@ -440,7 +478,7 @@ def remove_staff():
             manager_pin = request.form.get('manager_pin')
 
             # Check PIN is correct
-            db = sqlite3.connect("backend.db")
+            db = sqlite3.connect("sql/backend.db")
             tmp_cursor = db.execute("SELECT hash FROM manager_pin")
 
             for tmp_tuple in tmp_cursor:
@@ -462,7 +500,7 @@ def remove_staff():
             if not name or not department or not emp_id:
                 return render_template('error.html', message="Please make sure all fields are filled out.", username=session['username'])
 
-            db = sqlite3.connect("staff.db")
+            db = sqlite3.connect("sql/staff.db")
             tmp_cursor = db.execute("SELECT * FROM staff WHERE emp_id = ?", (emp_id,))
 
             for tmp_tuple in tmp_cursor:
@@ -493,14 +531,14 @@ def remove_staff():
             manager_pin = request.form.get('manager_pin')
 
             # Check PIN is correct one last time
-            db = sqlite3.connect("backend.db")
+            db = sqlite3.connect("sql/backend.db")
             tmp_cursor = db.execute("SELECT hash FROM manager_pin")
 
             for tmp_tuple in tmp_cursor:
                 if check_password_hash(tmp_tuple[0], manager_pin):
 
                     # Remove
-                    db = sqlite3.connect("staff.db")
+                    db = sqlite3.connect("sql/staff.db")
                     db.execute("DELETE FROM staff WHERE emp_id = ?", (employee_to_remove.emp_id,))
                     db.commit()
 
@@ -514,8 +552,6 @@ def remove_staff():
 
                 else:
                     return render_template('error.html', message="The PIN you entered is incorrect.", username=session['username'])
-
-
 
 
 
@@ -549,6 +585,7 @@ def staff_lookup():
 
         return render_template('staff_lookup.html', columns=columns, no_results=True, results=results, username=session['username'])
 
+
 @app.route("/edit_staff", methods=['GET', 'POST'])
 @login_required
 def edit_staff():
@@ -570,7 +607,7 @@ def edit_staff():
             # Edit info - set up query (column names don't work with ? placeholder)
             query = f"UPDATE staff SET {edit_info['column_to_edit']} = ? WHERE emp_id = ?"
 
-            db = sqlite3.connect("staff.db")
+            db = sqlite3.connect("sql/staff.db")
             try:
                 db.execute(query, (deformat_str(edit_info['new_value'], False), edit_info['emp_id']))
                 db.commit()
@@ -593,8 +630,6 @@ def edit_staff():
             edit_info['column_to_edit'] = request.form.get('column_to_edit')
             edit_info['new_value'] = request.form.get('new_value')
             edit_info['emp_id'] = request.form.get('emp_id')
-
-            print('\n\nEDIT_INFO: ', edit_info, '\n\n')
 
             message2 = f"Employee ID: {edit_info['emp_id']}'s {format_str(edit_info['column_to_edit'])} to '{edit_info['new_value']}'?"
             return render_template('confirmation.html', message=f"Are you sure you want to edit:", message2=message2)
@@ -631,9 +666,85 @@ def edit_staff():
             return render_template('edit_staff.html', columns=columns, no_results=True, staff=staff, results=results, username=session['username'])
 
 
-# UTILITY FUNCTIONS
+
+@app.route("/salary")
+@login_required
+def salary():
+
+    columns = format_list(staff_columns)
+    columns.insert(1, 'Salary')
+
+    # SQL
+    db = sqlite3.connect("sql/staff.db")
+    tmp_cursor = db.execute("SELECT salary.emp_id, salary, first_name, last_name, department, title, start_date FROM salary JOIN staff on salary.emp_id = staff.emp_id")
+
+    staff = []
+    for tmp_tuple in tmp_cursor:
+        tmp_dict = {}
+        for i in range(len(columns)):
+            if columns[i] == 'Salary':
+                tmp_dict[columns[i]] = usd(tmp_tuple[i], True)
+            else:
+                tmp_dict[columns[i]] = tmp_tuple[i]
+        staff.append(format_dict(tmp_dict))
+
+
+    return render_template('salary.html', columns=columns, staff=staff, username=session['username'])
+
+
+
+#   --- SQL FUNCTIONS ---
+
+def access_staff_sql(department):
+
+    # Retrieves info from selected department
+        db = sqlite3.connect("sql/staff.db")
+
+        if department == 'all':
+            tmp_cursor = db.execute("SELECT * FROM staff")
+        else:
+            tmp_cursor = db.execute("SELECT * FROM staff WHERE department = ?", (department,))
+
+        staff = []
+        for tmp_tuple in tmp_cursor:
+            tmp_dict = {}
+            for i in range(len(staff_columns)):
+                tmp_dict[staff_columns[i]] = tmp_tuple[i]
+            staff.append(tmp_dict)
+
+        # Return list of dicts
+        return staff
+
+
+
+def access_staff_sql_like(column, search):
+
+    # Create SQL query string because can not use column as ? since it should not be a type string
+    query = f'SELECT * FROM staff WHERE {deformat_str(column, True)} LIKE ?'
+
+    db = sqlite3.connect("sql/staff.db")
+    tmp_cursor = db.execute(query, (f'%{search}%',))
+
+    staff = []
+    for tmp_tuple in tmp_cursor:
+        tmp_dict = {}
+        for i in range(len(staff_columns)):
+            if type(tmp_tuple[i]) == str:
+                tmp_dict[deformat_str(staff_columns[i], True)] = format_str(tmp_tuple[i])
+            else:
+                tmp_dict[deformat_str(staff_columns[i], True)] = tmp_tuple[i]
+
+        staff.append(tmp_dict)
+
+    # Return list of dicts
+    return staff
+
+
+
+#   --- UTILITY FUNCTIONS ---
+
 def get_departments():
-    db = sqlite3.connect("staff.db")
+    db = sqlite3.connect("sql/staff.db")
     tmp_cursor = db.execute("SELECT department FROM departments")
 
     departments = []
@@ -649,10 +760,13 @@ def format_list(input_list):
 
     formatted_list = []
     for item in input_list:
+
         if type(item) == str:
             item = format_str(item)
+        elif type(item) == dict:
+            item = format_dict(item)
 
-        formatted_list.append(format_str(item))
+        formatted_list.append(item)
 
     return formatted_list
 
@@ -670,6 +784,7 @@ def format_dict(input_dict):
 
 
 def format_str(input_str):
+
     if type(input_str) == str:
         return input_str.replace('_', ' ').title().replace('Emp ', 'Employee ').replace('It', 'IT').replace('Id', 'ID').replace('Of ', 'of ')
     return input_str
@@ -687,26 +802,11 @@ def deformat_str(input_str, is_column_name):
     return input_str
 
 
-def access_staff_sql_like(column, search):
+def usd(x, with_cents):
+    if with_cents:
+        return f'${x:,.2f}'
+    else:
+        return f'${x:,f}'
 
-    # Create SQL query string because can not use column as ? since it should not be a type string
-    query = f'SELECT * FROM staff WHERE {deformat_str(column, True)} LIKE ?'
-
-    db = sqlite3.connect("staff.db")
-    tmp_cursor = db.execute(query, (f'%{search}%',))
-
-    staff = []
-    for tmp_tuple in tmp_cursor:
-        tmp_dict = {}
-        for i in range(len(staff_columns)):
-            if type(tmp_tuple[i]) == str:
-                tmp_dict[deformat_str(staff_columns[i], True)] = tmp_tuple[i].title()
-            else:
-                tmp_dict[deformat_str(staff_columns[i], True)] = tmp_tuple[i]
-
-        staff.append(tmp_dict)
-
-    # Return list of dicts
-    return staff
 
 
