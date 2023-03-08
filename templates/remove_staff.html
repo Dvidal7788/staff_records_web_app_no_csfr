@@ -46,16 +46,40 @@
         <form class="centered top" action="/remove_staff" method="post">
             <div class="mb-3">
                 <label class="form-label">Employee Name</label><br>
-                <input name="name" type="text" placeholder="Name" autofocus autocomplete="off" class="form_class"><br>
+                <input name="first_name" type="text" placeholder="Fist Name" autofocus autocomplete="off" class="form_class"><br>
+                <input name="last_name" type="text" placeholder="Last Name" autofocus autocomplete="off" class="form_class"><br>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Department</label><br>
-                <input name="department" type="text" placeholder="Department" autocomplete="off" class="form_class"><br>
+                <select name="department">
+                    <option disabled selected>Select Department</option>
+                    {% for department in departments %}
+                        <option value="{{ department }}">{{ department }}</option>
+                    {% endfor %}
+                </select>
+                <br>
             </div>
             <div class="mb-3">
                 <label class="form-label">Employee ID Number</label><br>
                 <input name="emp_id" type="text" placeholder="Employee ID Number" autocomplete="off" class="form_class"><br>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Last Date of Employment</label><br>
+                <input name="end_date" type="date" class="form_class"><br>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Reason for Leaving</label><br>
+                <select name="reason" class="centered">
+                    <option disabled selected>Select</option>
+                    {% for reason in reasons_for_leaving %}
+                        <option value="{{ reason }}">{{ reason }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Notes</label><small>(optional)</small><br>
+                <input name="notes" type="text" placeholder="Notes (optional)" autocomplete="off" class="form_class"><br>
             </div>
                 <input type="hidden" name="check_page2" value="True">
                 <button class="btn btn-danger" type="submit" class="form_class">Remove Staff Member</button>

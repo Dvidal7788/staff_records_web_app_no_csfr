@@ -1,3 +1,5 @@
+-- STAFF ----
+
 -- .schema
 
 -- CSV
@@ -32,17 +34,29 @@
 -- CREATE TABLE IF NOT EXISTS salary (
 --     emp_id INTEGER UNIQUE NOT NULL,
 --     salary MONEY NOT NULL,
---     FOREIGN KEY(emp_id) REFERENCES staff(emp_id)
+--     FOREIGN KEY(emp_id) REFERENCES staff(emp_id) ON DELETE CASCADE
 -- );
 
 -- CREATE TABLE IF NOT EXISTS departments (
 --     department VARCHAR(30)
 -- );
 
+-- CREATE TABLE IF NOT EXISTS former_staff (
+--     emp_id INTEGER UNIQUE NOT NULL,
+--     first_name VARCHAR(30) NOT NULL,
+--     last_name VARCHAR(30) NOT NULL,
+--     department VARCHAR(30),
+--     reason_for_leaving VARCHAR(30) NOT NULL,
+--     start_date DATE,
+--     end_date DATE,
+--     notes VARCHAR(100)
+-- );
+
 
 -- DROP TABLE staff;
 -- DROP TABLE salary;
 -- DROP TABLE departments;
+-- DROP TABLE former_staff;
 
 -- ALTER TABLE departmnents RENAME TO departments;
 
@@ -58,34 +72,88 @@
 
 -- SELECT salary.emp_id, salary, first_name, last_name, department, title, start_date FROM salary JOIN staff on salary.emp_id = staff.emp_id;
 
--- DROP TABLE users;
 -- DROP TABLE staff;
+-- DROP table salary;
+-- DROP TABLE departments;
+-- DROP TABLE former_staff;
 
--- INSERT INTO users VALUES(1,'dave123','test_hash1234efef');
--- INSERT INTO staff VALUES (0,'dave', 'director', '2023-02-15');
+
+-- INSERT INTO staff VALUES (24,'david', 'forrester', 'sales', 'sales manager', '2022-10-10');
+-- INSERT INTO salary VALUES (24, 90000);
+
+-- INSERT INTO salary VALUES (0, 250000);
+-- INSERT INTO salary VALUES (1, 250000);
+-- INSERT INTO salary VALUES (2, 65000.85);
+-- INSERT INTO salary VALUES (3, 80000);
+-- INSERT INTO salary VALUES (4, 80000);
+-- INSERT INTO salary VALUES (5, 90000);
+-- INSERT INTO salary VALUES (6, 70000);
+-- INSERT INTO salary VALUES (7, 60000);
+-- INSERT INTO salary VALUES (8, 95000);
+-- INSERT INTO salary VALUES (9, 70000);
+-- INSERT INTO salary VALUES (10, 85000);
+-- INSERT INTO salary VALUES (11, 65000);
+-- INSERT INTO salary VALUES (12, 85000);
+-- INSERT INTO salary VALUES (13, 100000);
+-- INSERT INTO salary VALUES (14, 90000);
+-- INSERT INTO salary VALUES (15, 90000);
+-- INSERT INTO salary VALUES (16, 75000);
+-- INSERT INTO salary VALUES (17, 75000);
+-- INSERT INTO salary VALUES (18, 75000);
+-- INSERT INTO salary VALUES (19, 75000);
+-- INSERT INTO salary VALUES (20, 65000);
+-- INSERT INTO salary VALUES (21, 75000);
+-- INSERT INTO salary VALUES (22, 75000);
+-- INSERT INTO salary VALUES (23, 65000);
+-- INSERT INTO salary VALUES (25, 80000);
+-- INSERT INTO salary VALUES (26, 90000);
+
+
 
 
 -- SELECT * FROM staff;
 -- SELECT * FROM salary;
+-- SELECT * FROM former_staff;
 
 -- SELECT * FROM departments;
 
--- DELETE FROM staff;
+
+-- ALTER TABLE former_employees
+-- RENAME TO former_staff;
+
+-- DELETE FROM staff WHERE emp_id = 24;
+-- DELETE FROM salary WHERE emp_id = 24;
+-- DELETE FROM former_staff WHERE emp_id = 24;
+
+
+-- DELETE FROM salary WHERE emp_id = 24;
+
+-- DELETE FROM salary;
+-- DELETE FROM former_staff;
 
 -------------------------
 -- BACKEND:
--- .schema
+.schema
 
 -- CREATE TABLE IF NOT EXISTS users (
 --     user_id INTEGER NOT NULL,
 --     username TEXT NOT NULL,
---     hash,
+--     pw_hash NOT NULL,
+--     security_question VARCHAR(50),
+--     security_answer VARCHAR(30),
 --     PRIMARY KEY(user_id)
 -- );
 
 -- CREATE TABLE IF NOT EXISTS manager_pin (
 --     hash TEXT
 -- );
+
+-- ALTER TABLE users
+-- ADD COLUMN security_question VARCHAR(50);
+
+-- ALTER TABLE users
+-- ADD COLUMN
+-- security_answer VARCHAR(30);
 
 
 -- DELETE FROM users;
@@ -95,6 +163,8 @@
 -- DROP TABLE users;
 -- DROP TABLE manager_pin;
 
+
+-- SELECT security_question FROM users;
 SELECT * FROM users;
 -- SELECT * FROM manager_pin;
 

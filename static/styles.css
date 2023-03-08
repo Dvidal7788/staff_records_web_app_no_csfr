@@ -44,3 +44,7 @@ input {
 .right {
     margin-right: 10px;
 }
+
+.smallest {
+    font-size: 0.8em
+}

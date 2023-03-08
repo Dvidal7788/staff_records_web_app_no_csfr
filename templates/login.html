@@ -10,6 +10,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
+    {% elif password_reset_successful %}
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong><img src="static/images/check-circle-green.svg" style="margin-bottom: 3px;"> Password Reset Successful!</strong> You may now log in.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+
     {% endif %}
 
 
@@ -19,7 +27,9 @@
         <input name="username" type="text" placeholder="Username" autofocus autocomplete="off" class="form_class"><br>
         <input name="password" type="password" placeholder="Password" autocomplete="off" class="form_class"><br>
         <button class="btn btn-primary" type="submit" class="form_class">Log In</button>
-
     </form>
+    <div class="centered top smallest">
+        <a href="/password_reset">Forgot password/Reset Password</a>
+    </div>
 
 {% endblock %}

@@ -33,29 +33,38 @@ class Results():
         self.asc_desc = asc_desc
 
 class RemoveStaff():
-    def __init__(self, emp_id, name, department):
-        self.emp_id = emp_id
-        self.name = name
-        self.department = department
+    # Struct:
+    emp_id: int
+    first_name: str
+    last_name: str
+    department: str
+    reason: str
+    end_date: str
+    notes: str
 
+    # Reset struct
     def reset(self):
-        self.emp_id = -1
-        self.name = 'NULL'
+        self.emp_id = -1 # emp_id starts with 0, so -1 is effectively NULL
+        self.first_name = 'NULL' # Using string 'NULL' instead of NULL, bc can not set it to NULL
+        self.last_name = 'NULL'
         self.department = 'NULL'
+        self.reason = 'NULL'
+        self.end_date = 'NULL'
+        self.notes = 'NULL'
         return
 
 
 # Globals
-# export_criteria = ExportCriteria('all', 'emp_id')
 departments_all = False
 staff_added = False
 email_sent = False
-employee_to_remove = RemoveStaff(-1, 'NULL', 'NULL')
+emp_to_remove = RemoveStaff()
+emp_to_remove.reset()
 access = {}
 access['show_page2'] = False
 access['show_page3'] = False
-# global registration_success
 registration_success = False
+password_reset_successful = False
 
 # Retrieve up to date staff column names
 db = sqlite3.connect("sql/staff.db")
@@ -65,7 +74,8 @@ for tmp_tuple in tmp_cursor:
     staff_columns.append(tmp_tuple[0])
 
 
-# staff_columns = ['emp_id', 'first_name', 'last_name', 'department', 'title', 'start_date']
+reasons_for_leaving = ['terminated', 'quit', 'retired', 'layed off', 'other']
+security_questions = ["What is your mother's maiden name?", "In which city were you born?", "What is the name of your first crush?", "What is the name of your first pet?", "What is the name of your childhood best friend?", "What was the make and model of your first car?"]
 
 def login_required(f):
     # Decorate routes to require login.
@@ -73,6 +83,7 @@ def login_required(f):
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        # if 'user_id' not in session:
         if session.get("user_id") is None:
             return redirect("/login")
         return f(*args, **kwargs)
@@ -93,13 +104,15 @@ def register():
 
     # GET
     if request.method == 'GET':
-        return render_template('register.html')
+        return render_template('register.html', security_questions=security_questions)
 
     # POST
     else:
         username = request.form.get('username')
         password = request.form.get('password')
         confirmation = request.form.get('confirmation')
+        security_question = request.form.get('security_question')
+        security_answer = request.form.get('security_answer')
 
         # Confirm form filled out
         if not username and not password and not confirmation:
@@ -110,6 +123,8 @@ def register():
             return render_template('error.html', message="Password field left blank")
         elif not confirmation:
             return render_template('error.html', message="Password Confirmation field left blank")
+        elif not security_question or not security_answer:
+            return render_template('error.html', message="Security Question/Answer not complete")
 
         # Make sure username is not already taken
         db = sqlite3.connect("sql/backend.db")
@@ -126,6 +141,7 @@ def register():
         if len(password) < 8:
             return render_template('error.html', message=pw_criteria1, message2=pw_criteria2)
 
+        # Verify password meets pw_criteria2 as stated above
         pw_letter = False
         pw_number = False
         pw_special_char = False
@@ -148,7 +164,7 @@ def register():
             return render_template('error.html', message=pw_criteria1, message2=pw_criteria2)
 
 
-        # Password matches confirmation
+        # Verify password matches confirmation password
         if password != confirmation:
             return render_template('error.html', message="The password you entered does not match your confirmation")
 
@@ -161,15 +177,18 @@ def register():
             else:
                 new_id = tmp_tuple[0] + 1
 
-        cur = db.cursor()
-        cur.execute("INSERT INTO users VALUES(?,?,?)", (new_id, username, generate_password_hash(password, method='pbkdf2:sha512')))
+        db.execute("INSERT INTO users (user_id, username, pw_hash) VALUES(?,?,?)", (new_id, username, generate_password_hash(password, method='pbkdf2:sha512')))
         db.commit()
+
+        # Add security question/answer to table if user entered this info
+        if security_question and security_answer:
+            db.execute("UPDATE users SET security_question = ?, security_answer = ?  WHERE user_id = ?", (security_question, generate_password_hash(security_answer, method='pbkdf2:sha512'), new_id))
+            db.commit()
 
         global registration_success
         registration_success = True
 
         return redirect("/login")
-        # return render_template('success.html', message='Registration Successful!', message2='You may now log in.')
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -178,12 +197,16 @@ def login():
     # GET
     if request.method == 'GET':
 
-        # Show registration success alert or not
+        # Show alerts or not
         global registration_success
+        global password_reset_successful
 
         if registration_success:
             registration_success = False
             return render_template('login.html', registration_success=True)
+        elif password_reset_successful:
+            password_reset_successful = False
+            return render_template('login.html', password_reset_successful=True)
 
         return render_template('login.html', registration_success=False)
 
@@ -216,11 +239,73 @@ def login():
 @app.route("/logout")
 def logout():
 
+    # Reset globals and redirect to "/"
     session.clear()
-    employee_to_remove.reset()
-    show_page2 = show_page3 = email_sent = staff_added = departments_all = False
+    emp_to_remove.reset()
+    email_sent = staff_added = departments_all = registration_success = False
+    for key in access:
+        access[key] = False
 
     return redirect("/")
+
+
+@app.route("/password_reset", methods=['GET', 'POST'])
+def password_reset():
+    global username
+
+    # GET
+    if request.method == 'GET':
+        return render_template("/password_reset.html", security_questions=security_questions)
+
+    # POST
+    else:
+        # Check Page 1
+        if request.form.get('username'):
+
+            username = request.form.get('username')
+
+            # Retrive security question from SQL database
+            db = sqlite3.connect("sql/backend.db")
+            tmp_cursor = db.execute("SELECT security_question FROM users WHERE username = ?", (username,))
+            for tmp_tuple in tmp_cursor:
+                # Display Page 2
+                return render_template("/password_reset.html", security_question=tmp_tuple[0], show_page2=True)
+
+            # Username not found
+            return render_template("/password_reset.html", username_not_found=True)
+
+        # Check Page 2
+        elif request.form.get('security_answer'):
+
+            db = sqlite3.connect("sql/backend.db")
+            tmp_cursor = db.execute("SELECT security_answer FROM users WHERE username = ?", (username,))
+            for tmp_tuple in tmp_cursor:
+                security_answer_hashed = tmp_tuple[0]
+
+            if check_password_hash(security_answer_hashed, request.form.get('security_answer')):
+                # Display Page 3
+                return render_template("/password_reset.html", show_page3=True, username=username)
+            else:
+                return render_template("/password_reset.html", answer_incorrect=True)
+
+        elif request.form.get('new_password') and request.form.get('confirmation'):
+            new_password = request.form.get('new_password')
+            confirmation = request.form.get('confirmation')
+
+            if new_password != confirmation:
+                return render_template("password_reset.html", passwords_did_not_match=True)
+
+            db = sqlite3.connect("sql/backend.db")
+            db.execute("UPDATE users SET pw_hash = ? WHERE username = ?", (generate_password_hash(new_password ,method='pbkdf2:sha512'), username))
+            db.commit()
+
+            # Reset global
+            username = None
+
+            global password_reset_successful
+            password_reset_successful = True
+
+            return redirect("/login")
 
 
 @app.route("/add_new_staff", methods=['GET', 'POST'])
@@ -356,15 +441,8 @@ def departments():
         for i in range(len(staff)):
             staff[i] = format_dict(staff[i])
 
-        # # Update export criteria
-        # export_criteria.department = deformat_str(department, False)
-        # export_criteria.sort_by = deformat_str(sort_by, True)
-
         # Results
         results = Results(department, sort_by, len(staff), 'ascending')
-        # results['department_selected'] = department
-        # results['sort_by'] = sort_by
-        # results['num_of_results'] = len(staff)
 
         return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'])
 
@@ -390,27 +468,23 @@ def csv_export():
     # Create filename
     filename = f'{deformat_str(results.department, False)}_{datetime.now()}.csv'
 
-    # Create list of columns
-    columns = staff_columns
-    # columns = []
-    # for key in staff[0]:
-    #     columns.append(key)
+    num_of_columns = len(staff_columns)
 
-    num_of_columns = len(columns)
-    # Write to new csv file
+    # Write data to new csv file
     with open(filename, 'w') as file:
+
         # Write header
         for i in range(num_of_columns):
             if i < num_of_columns-1:
-                file.write(f'{columns[i]},')
+                file.write(f'{staff_columns[i]},')
             else:
-                file.write(f'{columns[i]}\n')
+                file.write(f'{staff_columns[i]}\n')
 
         # Write rest of file
         for person in staff:
             i = 0
             for key in person:
-                if i < len(columns)-1:
+                if i < len(staff_columns)-1:
                     file.write(f'{person[key]},')
                 else:
                     file.write(f'{person[key]}\n')
@@ -442,6 +516,7 @@ def csv_export():
 
 
 @app.route("/remove_staff", methods=['GET', 'POST'])
+@login_required
 def remove_staff():
     global access_pages
     global employee_to_remove
@@ -460,7 +535,7 @@ def remove_staff():
 
             # Page 2 - Remove Staff Page
             access['show_page2'] = False
-            return render_template('remove_staff.html', show_page2=True, show_page3=False, username=session['username'])
+            return render_template('remove_staff.html', reasons_for_leaving=format_list(reasons_for_leaving), show_page2=True, show_page3=False, departments=format_list(get_departments()), username=session['username'])
 
         else:
 
@@ -472,7 +547,7 @@ def remove_staff():
     else:
 
         # Page 1 - PIN Page
-        if request.form.get('check_page1') == 'True':
+        if request.form.get('check_page1'):
 
             # Retrieve manager PIN
             manager_pin = request.form.get('manager_pin')
@@ -492,30 +567,38 @@ def remove_staff():
         # Page 2 - Remove Staff Page
         elif request.form.get('check_page2'):
 
-            # REMOVE Staff Member
-            name = request.form.get('name').lower()
-            department = request.form.get('department').lower()
-            emp_id = request.form.get('emp_id')
-
-            if not name or not department or not emp_id:
+            if not request.form.get('emp_id') or not request.form.get('first_name') or not request.form.get('last_name') or not request.form.get('department') or not request.form.get('reason') or not request.form.get('end_date'):
                 return render_template('error.html', message="Please make sure all fields are filled out.", username=session['username'])
+
+            # REMOVE Staff Member
+            emp_id = request.form.get('emp_id')
+            first_name = request.form.get('first_name').lower()
+            last_name = request.form.get('last_name').lower()
+            department = request.form.get('department').lower()
+            reason = request.form.get('reason').lower()
+            end_date = request.form.get('end_date')
+            notes = request.form.get('notes')
 
             db = sqlite3.connect("sql/staff.db")
             tmp_cursor = db.execute("SELECT * FROM staff WHERE emp_id = ?", (emp_id,))
 
             for tmp_tuple in tmp_cursor:
-
                 # Validate submission
-                if tmp_tuple[1] != name:
+                if tmp_tuple[1] != first_name or tmp_tuple[2] != last_name:
                     return render_template('error.html', message="The name you entered does not match the employee ID you entered", username=session['username'])
-                elif tmp_tuple[2] != department:
+                elif tmp_tuple[3] != department:
                     return render_template('error.html', message="The employee who matches the name and employee ID that you entered is assigned to a different department than you entered.", username=session['username'])
-                elif tmp_tuple[0] == int(emp_id) and tmp_tuple[1] == name and tmp_tuple[2] == department:
+                elif tmp_tuple[0] == int(emp_id):
 
                     # Remember employee to remove
-                    employee_to_remove.emp_id = int(emp_id)
-                    employee_to_remove.name = name
-                    employee_to_remove.department = department
+                    emp_to_remove.emp_id = int(emp_id)
+                    emp_to_remove.first_name = first_name
+                    emp_to_remove.last_name = last_name
+                    emp_to_remove.department = department
+                    emp_to_remove.reason = reason
+                    emp_to_remove.end_date = end_date
+                    if notes:
+                        emp_to_remove.notes = notes
 
                     # Allow access to Final page
                     access['show_page3'] = True
@@ -523,8 +606,10 @@ def remove_staff():
                     # Validated (move on to final PIN)
                     return redirect("/remove_staff")
 
-            return render_template('error.html', message="No employee matches the employee ID that you entered.", username=session['username'])
+            # Final validation if never entered into for loop above (tmp_cursor)
+            return render_template('error.html', message="No staff member matches the employee ID that you entered.", username=session['username'])
 
+        # Final Confirmation Page - Remove staff from SQL database/ Update former_employees table
         elif request.form.get('check_page3'):
 
             # Retrieve PIN
@@ -539,14 +624,32 @@ def remove_staff():
 
                     # Remove
                     db = sqlite3.connect("sql/staff.db")
-                    db.execute("DELETE FROM staff WHERE emp_id = ?", (employee_to_remove.emp_id,))
+
+                    # Retreive start date
+                    tmp_cursor = db.execute("SELECT start_date FROM staff WHERE emp_id = ?", (emp_to_remove.emp_id,))
+                    for tmp_tuple in tmp_cursor:
+                        start_date = tmp_tuple[0]
+
+                    # Remove from staff table
+                    db.execute("DELETE FROM staff WHERE emp_id = ?", (emp_to_remove.emp_id,))
                     db.commit()
 
+                    # Remove from salary table - ON DELETE CASCADE doesn't seem to be working
+                    db.execute("DELETE FROM salary WHERE emp_id = ?", (emp_to_remove.emp_id,))
+                    db.commit()
+
+                    # Update former_employees table
+                    query = "INSERT INTO former_staff VALUES(?,?,?,?,?,?,?,?)"
+                    db.execute(query, (emp_to_remove.emp_id, emp_to_remove.first_name, emp_to_remove.last_name, emp_to_remove.department, emp_to_remove.reason, start_date, emp_to_remove.end_date, emp_to_remove.notes))
+                    db.commit()
+
+
+
                     # Prepare confirmation message
-                    confirmation_message2 = f'Employee ID: {employee_to_remove.emp_id}, Name: {employee_to_remove.name}, Department: {employee_to_remove.department}'
+                    confirmation_message2 = f'Employee ID: {emp_to_remove.emp_id}, Name: {emp_to_remove.first_name.title()} {emp_to_remove.last_name.title()}, Department: {format_str(emp_to_remove.department)}'
 
                     # Reset global
-                    employee_to_remove.reset()
+                    emp_to_remove.reset()
 
                     return render_template('success.html', message="The following staff member has been successfully removed from the staff database:", message2=confirmation_message2, username=session['username'])
 
@@ -692,6 +795,41 @@ def salary():
     return render_template('salary.html', columns=columns, staff=staff, username=session['username'])
 
 
+@app.route("/former_staff")
+@login_required
+def former_staff():
+
+    db = sqlite3.connect("sql/staff.db")
+
+    # Retrieve up to date column names from SQL
+    tmp_cursor = db.execute("SELECT name FROM PRAGMA_TABLE_INFO('former_staff')")
+    former_staff_columns = []
+
+    # Iterate through cursor
+    for tmp_tuple in tmp_cursor:
+        former_staff_columns.append(tmp_tuple[0])
+
+
+    # Retrieve Former Staff from SQL
+    tmp_cursor = db.execute("SELECT * FROM former_staff")
+
+    # Iterate through cursor
+    former_staff = []
+    for tmp_tuple in tmp_cursor:
+        tmp_dict = {}
+        for i in range(len(former_staff_columns)):
+
+            # Don't format notes (last index)
+            if i == len(former_staff_columns)-1:
+                tmp_dict[former_staff_columns[i]] = tmp_tuple[i]
+            else:
+                tmp_dict[former_staff_columns[i]] = format_str(tmp_tuple[i])
+
+        former_staff.append(tmp_dict)
+
+    return render_template('former_staff.html', former_staff=former_staff, columns=format_list(former_staff_columns), username=session['username'])
+
+
 
 #   --- SQL FUNCTIONS ---
 
@@ -753,6 +891,7 @@ def get_departments():
 
     departments.sort
 
+    # Return list of department names
     return departments
 
 
@@ -761,6 +900,7 @@ def format_list(input_list):
     formatted_list = []
     for item in input_list:
 
+        # Although input is type checked in format_str() for strings, still need to type check for dicts, so I can format lists of dicts
         if type(item) == str:
             item = format_str(item)
         elif type(item) == dict:
@@ -774,10 +914,9 @@ def format_dict(input_dict):
 
     formatted_dict = {}
     for key in input_dict:
-        if type(input_dict[key]) == str:
-            formatted_dict[key] = format_str(input_dict[key])
-        else:
-            formatted_dict[key] = input_dict[key]
+
+        # Input is type checked in format_str(), so no need to type check here
+        formatted_dict[key] = format_str(input_dict[key])
 
     return formatted_dict
 

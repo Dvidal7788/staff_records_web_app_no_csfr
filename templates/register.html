@@ -2,14 +2,43 @@
 
 {% block main %}
 
-    <form class="centered top" action="/register" method="post">
-        <h2>Register</h2>
+    <div class="container-md" style="width: 33%">
+        <form class="centered top" action="/register" method="post">
+            <h2>Register</h2>
+            <div class="mb-3">
+                <label class="form-label top">Username</label><br>
+                <input name="username" type="text" placeholder="Enter Username" autofocus autocomplete="off" class="form_class form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label top">Password</label><br>
+                <input name="password" type="password" placeholder="Enter Password" autocomplete="off" class="form_class form-control">
+                <div class="form-text">
+                    Must be at least 8 characters, contain at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label top">Confirm Password</label><br>
+                <input name="confirmation" type="password" placeholder="Confirm Password" autocomplete="off" class="form_class form-control ">
+            </div>
+            <div>
+                <hr>
+                <label class="form-label">Security Question</label><br>
+                <select name="security_question" class="form_class form-select centered">
+                    <option disabled selected>Select Security Quesion</option>
+                    {% for question in security_questions %}
+                        <option value="{{ question }}">{{ question }}</option>
+                    {% endfor %}
+                </select>
+                <div class="form-text">
+                    The security question will only be used in the event that you forget your password. This will allow you to reset your password.
+                </div>
+                <br>
+                <input name="security_answer" type="text" placeholder="Enter Answer Here" autocomplete="off" class="form_class form-control">
+                <hr>
+            </div>
+            <button class="btn btn-success" type="submit" class="form_class">Register</button>
 
-        <input name="username" type="text" placeholder="Username" autofocus autocomplete="off" class="form_class"><br>
-        <input name="password" type="password" placeholder="Password" autocomplete="off" class="form_class"><br>
-        <input name="confirmation" type="password" placeholder="Confirm Password" autocomplete="off" class="form_class"><br>
-        <button class="btn btn-primary" type="submit" class="form_class">Register</button>
-
-    </form>
+        </form>
+    </div>
 
 {% endblock %}

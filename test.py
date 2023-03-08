@@ -24,7 +24,7 @@
 
 # # print(generate_password_hash('0000', method='pbkdf2:sha512'))
 
-# db = sqlite3.connect("backend.db")
+# db = sqlite3.connect("sql/backend.db")
 # # # # cur = db.cursor()
 # db.execute("INSERT INTO manager_pin VALUES (?)", (generate_password_hash('0000', method='pbkdf2:sha512'),))
 # db.commit()

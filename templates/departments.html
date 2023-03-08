@@ -25,35 +25,36 @@
     {% endif %}
 
     <!-- SELECT DEPARTMENT -->
-    <form class="centered top" action="/departments" method="post">
-        <h2>Departments</h2>
-        <select name="department" class="form-select top">
-            <option class="centered" disabled selected>SELECT DEPARTMENT</option>
-            <option value="all">All Departments</option>
-            <optgroup label="Departments">
-                {% for department in departments %}
-                    <option value="{{ department }}">{{ department }}</option>
+    <div class="container" style="width: 25%">
+        <form class="centered top" action="/departments" method="post">
+            <h2>Departments</h2>
+            <select name="department" class="form-select top">
+                <option class="centered" disabled selected>SELECT DEPARTMENT</option>
+                <option value="all">All Departments</option>
+                <optgroup label="Departments">
+                    {% for department in departments %}
+                        <option value="{{ department }}">{{ department }}</option>
+                    {% endfor %}
+                </optgroup>
+            </select>
+            <br>
+            <!-- SORT BY -->
+            <!-- <label for="form">Sort</label> -->
+            <select name="sort_by" class="form-select form-select-sm top">
+                <option disabled selected>Sort By</option>
+                {% for column in columns %}
+                    {% if column == 'Employee ID' %}
+                        <option name="sort_by" value="{{ column }}">{{ column }} (Default)</option>
+                    {% else %}
+                        <option name="sort_by" value="{{ column }}">{{ column }}</option>
+                    {% endif %}
                 {% endfor %}
-            </optgroup>
-        </select>
-        <br>
-        <!-- SORT BY -->
-        <!-- <label for="form">Sort</label> -->
-        <select name="sort_by" class="form-select form-select-sm top">
-            <option disabled selected>Sort By</option>
-            {% for column in columns %}
-                {% if column == 'Employee ID' %}
-                    <option name="sort_by" value="{{ column }}">{{ column }} (Default)</option>
-                {% else %}
-                    <option name="sort_by" value="{{ column }}">{{ column }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-        <br>
-        <button type="submit" class="btn btn-primary top">Select Department</button>
-
+            </select>
+            <br>
+            <button type="submit" class="btn btn-primary top">Select Department</button>
+        </form>
+    </div>
     <hr>
-    </form>
 
     {% if display_results %}
         <div>
