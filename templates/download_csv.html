@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <!-- Download Link -->
+    <div class="centered top">
+        <h2>Download CSV File</h2>
+        <br>
+
+        <a href="csv/{{ filename }}" download="{{filename}}" target="blank">CLICK HERE TO DOWNLOAD YOUR REQUESTED CSV <img src="static/images/download-blue.svg" style="margin-bottom: 5px;"></a>
+
+        <hr>
+
+        <!-- Experiencing problems -->
+        <div class="top">
+            <small><b>If you experience any issues downloading your CSV file, here are some suggestions:</b></small>
+
+            <div class="smallest top">
+                &#9312 Make sure your browser is not blocking downloads.
+                <br>&#9313 Try a different browser.
+                <br>&#9314 Try the e-mail option instead. This will e-mail you your CSV file and you can download it from there.
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

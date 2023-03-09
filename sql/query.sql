@@ -114,6 +114,7 @@
 -- SELECT * FROM staff;
 -- SELECT * FROM salary;
 -- SELECT * FROM former_staff;
+UPDATE salary SET salary = 95000 WHERE emp_id = 26;
 
 -- SELECT * FROM departments;
 
@@ -122,8 +123,9 @@
 -- RENAME TO former_staff;
 
 -- DELETE FROM staff WHERE emp_id = 24;
--- DELETE FROM salary WHERE emp_id = 24;
+-- DELETE FROM salary WHERE emp_id = 33 OR emp_id = 34;
 -- DELETE FROM former_staff WHERE emp_id = 24;
+-- DELETE FROM staff WHERE last_name = 'huang' OR last_name = 'naim';
 
 
 -- DELETE FROM salary WHERE emp_id = 24;
@@ -133,7 +135,7 @@
 
 -------------------------
 -- BACKEND:
-.schema
+-- .schema
 
 -- CREATE TABLE IF NOT EXISTS users (
 --     user_id INTEGER NOT NULL,
@@ -165,7 +167,7 @@
 
 
 -- SELECT security_question FROM users;
-SELECT * FROM users;
+-- SELECT * FROM users;
 -- SELECT * FROM manager_pin;
 
 

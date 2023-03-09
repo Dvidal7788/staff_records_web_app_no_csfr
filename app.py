@@ -65,6 +65,7 @@ access['show_page2'] = False
 access['show_page3'] = False
 registration_success = False
 password_reset_successful = False
+results = None
 
 # Retrieve up to date staff column names
 db = sqlite3.connect("sql/staff.db")
@@ -72,7 +73,6 @@ tmp_cursor = db.execute("SELECT name FROM PRAGMA_TABLE_INFO('staff')")
 staff_columns = []
 for tmp_tuple in tmp_cursor:
     staff_columns.append(tmp_tuple[0])
-
 
 reasons_for_leaving = ['terminated', 'quit', 'retired', 'layed off', 'other']
 security_questions = ["What is your mother's maiden name?", "In which city were you born?", "What is the name of your first crush?", "What is the name of your first pet?", "What is the name of your childhood best friend?", "What was the make and model of your first car?"]
@@ -398,7 +398,7 @@ def departments():
     elif request.method == 'POST' or departments_all:
 
         # Check if asc/desc
-        if request.form.get('asc_desc'):
+        if request.form.get('asc_desc') and results and staff:
 
             asc_desc = request.form.get('asc_desc')
             results.sort_by = request.form.get('resort_by')
@@ -447,9 +447,14 @@ def departments():
         return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'])
 
 
+
 @app.route("/csv_export", methods=['POST'])
 @login_required
 def csv_export():
+
+    # Remove any previous CSVs
+    os.system('rm -f csv/*')
+
     # global export_criteria
     global email_sent
 
@@ -466,12 +471,13 @@ def csv_export():
     staff = format_list(staff)
 
     # Create filename
-    filename = f'{deformat_str(results.department, False)}_{datetime.now()}.csv'
+    file_path = f'csv/{deformat_str(results.department, False)}_{datetime.now()}.csv'
+    file_path = file_path.replace(' ', '_')
 
     num_of_columns = len(staff_columns)
 
     # Write data to new csv file
-    with open(filename, 'w') as file:
+    with open(file_path, 'w') as file:
 
         # Write header
         for i in range(num_of_columns):
@@ -490,29 +496,35 @@ def csv_export():
                     file.write(f'{person[key]}\n')
                 i += 1
 
-    # E-mail
-    email = request.form.get('email')
-    message = Message('The csv file you requested', recipients=[email])
+    if not request.form.get('download_csv'):
 
-    if results.department != 'all':
-        message.body = f"Here is the csv file you requested of:\n\nThe '{results.department}' Department sorted by '{results.sort_by}' ({results.asc_desc})."
-    else:
-        message.body = f"Here is the csv file you requested of:\n\n'All departments' sorted by '{results.sort_by}'."
+        # E-mail
+        email = request.form.get('email')
+        message = Message('The csv file you requested', recipients=[email])
 
-    # Attach
-    with app.open_resource(filename) as csv_fp:
-        message.attach(filename, 'application/csv', csv_fp.read())
+        if results.department != 'all':
+            message.body = f"Here is the csv file you requested of:\n\nThe '{results.department}' Department sorted by '{results.sort_by}' ({results.asc_desc})."
+        else:
+            message.body = f"Here is the csv file you requested of:\n\n'All departments' sorted by '{results.sort_by}'."
 
-    # Send e-mail
-    mail.send(message)
+        # Attach
+        with app.open_resource(file_path) as csv_fp:
+            message.attach(file_path, 'application/csv', csv_fp.read())
 
-    # Remove csv
-    os.remove(filename)
+        # Send e-mail
+        mail.send(message)
 
-    # Email confirmation
-    email_sent = True
+        # Email confirmation
+        email_sent = True
 
-    return redirect("/departments")
+        # Remove csv
+        os.remove(file_path)
+
+        return redirect("/departments")
+
+    return render_template("download_csv.html", filename=file_path.replace('csv/', ''), username=session['username'])
+
+
 
 
 @app.route("/remove_staff", methods=['GET', 'POST'])

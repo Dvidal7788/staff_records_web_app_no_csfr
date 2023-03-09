@@ -57,15 +57,30 @@
     <hr>
 
     {% if display_results %}
-        <div>
-            <!-- Export as csv -->
-            <form action="/csv_export" method="post">
-                <div style="float: right">
-                    <input type="email" name="email" placeholder="Enter E-mail to receive csv" required>
-                    <button class="btn btn-secondary" style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .1rem; --bs-btn-font-size: .75rem; margin-right: 10px;">Export as CSV <img src="static/images/mail-offwhite.svg" style="margin-bottom: 3px;"></button>
-                    <!-- <button class="btn btn-secondary" style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .1rem; --bs-btn-font-size: .75rem; float: right; margin-right: 10px;">Export as CSV</button> -->
-                </div>
-            </form>
+        <div class="container-fluid">
+
+            <!-- CSV -->
+            <div style="float: right">
+
+                <!-- Export as csv -->
+                <form action="/csv_export" method="post">
+                    <div style="float: right">
+                        <input type="email" name="email" placeholder="Enter E-mail to receive CSV" required autocomplete="off">
+                        <button class="btn btn-secondary" style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .1rem; --bs-btn-font-size: .76rem; margin-right: 10px; margin-bottom: 5px;">E-Mail as CSV <img src="static/images/mail-offwhite.svg" style="margin-bottom: 3px;"></button>
+                    </div>
+                </form>
+
+                <!-- Download CSV -->
+                <form action="/csv_export" method="post">
+                    <div style="float: right">
+                        <input name="download_csv" type="hidden" value="True">
+                        <button class="btn btn-secondary" style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .1rem; --bs-btn-font-size: .73rem; margin-right: 10px; margin-top: 3px;">Download CSV <img src="static/images/download.svg" style="margin-bottom: 3px;"></button>
+                    </div>
+                </form>
+
+            </div>
+
+            <!-- Results -->
             {% if results.department == 'all' %}
                 <small class="left">Showing results for: <b>'All Departments'</b> sorted by <b>'{{ results.sort_by }}'</b> ({{ results.asc_desc }})
                 </small><br>
@@ -74,8 +89,10 @@
                 </small><br>
             {% endif %}
             <small class="left">Results: {{ results.num_of_results }}</small>
+
         </div>
     {% endif %}
+
 
     <!-- TABLE -->
     <br>

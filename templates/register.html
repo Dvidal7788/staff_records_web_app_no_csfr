@@ -11,14 +11,18 @@
             </div>
             <div class="mb-3">
                 <label class="form-label top">Password</label><br>
-                <input name="password" type="password" placeholder="Enter Password" autocomplete="off" class="form_class form-control">
+                <input name="password" type="password" placeholder="Enter Password" autocomplete="off" class="form_class form-control" id="passwordInput">
                 <div class="form-text">
+                    <input type="checkbox" onclick="togglePasswordText()"> <small>Show Password</small><br>
                     Must be at least 8 characters, contain at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.
                 </div>
             </div>
             <div class="mb-3">
                 <label class="form-label top">Confirm Password</label><br>
-                <input name="confirmation" type="password" placeholder="Confirm Password" autocomplete="off" class="form_class form-control ">
+                <input name="confirmation" type="password" placeholder="Confirm Password" autocomplete="off" class="form_class form-control" id="passwordConfirmationInput">
+            </div>
+            <div class="form-text">
+                <input type="checkbox" onclick="togglePasswordConfirmationText()"> <small>Show Confirmation</small>
             </div>
             <div>
                 <hr>
