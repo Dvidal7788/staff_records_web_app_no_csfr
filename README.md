@@ -16,7 +16,7 @@ To Test App:
  
 DEPARTMENTS:
 /departments
-  - This route lets you choose any department (or all departments) and sort the staff names by a various criteria.
+  - This route lets you choose any department (or all departments) and sort the staff names by various criteria.
        - The desired data is retrieved from a SQL database and displayed on screen.
   - You may click the up/down arrows by any column to re-sort.
   - You may type your email in the text field to have an CSV of the chosen department (sorted by the criteria of your choosing) sent to your e-mail.
