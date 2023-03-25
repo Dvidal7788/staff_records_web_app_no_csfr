@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block title %} - Lookup{% endblock %}
+
 {% block main %}
 
     <!-- Alert -->
@@ -26,20 +28,23 @@
             {% endfor %}
         </select>
         <input name="search" type="text" placeholder="Search" style="background-image:"><br>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button class="btn btn-primary top">Look Up</button>
     </form>
 
     {% if found %}
         <!-- Results -->
         <hr>
-        <small class="left">{{ results['num_of_results'] }} Results matched your query for '{{ results['search'] }}' in {{ results['column'] }}.</small>
+        <small class="left">{{ results['num_of_results'] }} Results matched your query for <b>'{{ results['search'] }}'</b> in <b>{{ results['column'] }}</b>.</small>
         <br>
         <!-- Table of results -->
-        <table class="table table-primary centered">
+        <table class="table table-primary centered top">
             <thead>
-                {% for column in columns %}
-                    <th>{{ column }}</th>
-                {% endfor %}
+                <tr>
+                    {% for column in columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
             </thead>
             <tbody>
                 {% for employee in staff %}

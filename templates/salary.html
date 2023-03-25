@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block title %} - Salaries{% endblock %}
+
 {% block main %}
     <!-- Header -->
     <div class="centered top">
@@ -11,13 +13,15 @@
     <!-- Table -->
     <table class="table table-primary table-hover centered top">
         <thead>
-            {% for column in columns %}
-                {% if column == 'Salary' %}
-                    <th style="background-color: #eeeeee; color: #559055;">{{ column }}</th>
-                {% else %}
-                    <th>{{ column }}</th>
-                {% endif %}
-            {% endfor %}
+            <tr>
+                {% for column in columns %}
+                    {% if column == 'Salary' %}
+                        <th style="background-color: #eeeeee; color: #559055;">{{ column }}</th>
+                    {% else %}
+                        <th>{{ column }}</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
         </thead>
         <tbody class="table-group-divider">
             {% for person in staff %}

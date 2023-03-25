@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block title %} - Register{% endblock %}
+
 {% block main %}
 
     <div class="container-md" style="width: 33%">
@@ -11,19 +13,19 @@
             </div>
             <div class="mb-3">
                 <label class="form-label top">Password</label><br>
-                <input name="password" type="password" placeholder="Enter Password" autocomplete="off" class="form_class form-control" id="passwordInput">
+                <input name="password" type="password" placeholder="Enter Password" autocomplete="off" class="form_class form-control password-input">
                 <div class="form-text">
-                    <input type="checkbox" onclick="togglePasswordText()"> <small>Show Password</small><br>
                     Must be at least 8 characters, contain at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.
                 </div>
             </div>
             <div class="mb-3">
                 <label class="form-label top">Confirm Password</label><br>
-                <input name="confirmation" type="password" placeholder="Confirm Password" autocomplete="off" class="form_class form-control" id="passwordConfirmationInput">
+                <input name="confirmation" type="password" placeholder="Confirm Password" autocomplete="off" class="form_class form-control password-input">
             </div>
-            <div class="form-text">
-                <input type="checkbox" onclick="togglePasswordConfirmationText()"> <small>Show Confirmation</small>
+            <div class="form-text" style="float:left">
+                <input type="checkbox" id="checkbox"> <small>Show Password</small>
             </div>
+            <br>
             <div>
                 <hr>
                 <label class="form-label">Security Question</label><br>
@@ -40,6 +42,7 @@
                 <input name="security_answer" type="text" placeholder="Enter Answer Here" autocomplete="off" class="form_class form-control">
                 <hr>
             </div>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-success" type="submit" class="form_class">Register</button>
 
         </form>

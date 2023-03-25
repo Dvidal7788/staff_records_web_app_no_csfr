@@ -1,4 +1,9 @@
 flask
 Flask-Mail
+flask_wtf.csrf
+functools
 werkzeug.security
 sqlite3
+datetime
+os
+re

@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block title %} - Edit Staff{% endblock %}
+
 {% block main %}
 
 
@@ -47,6 +49,7 @@
             {% endfor %}
         </select>
         <input name="search" type="text" placeholder="Search" style="background-image:"><br>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button class="btn btn-primary top">Look Up</button>
     </form>
 
@@ -54,15 +57,17 @@
     <!-- Table of results -->
     {% if found %}
         <hr>
-        <small class="left">{{ results['num_of_results'] }} Results matched your query for '{{ results['search'] }}' in {{ results['column'] }}.</small>
+        <small class="left">{{ results['num_of_results'] }} Results matched your query for <b>'{{ results['search'] }}'</b> in <b>{{ results['column'] }}</b>.</small>
         <br><br>
         <form action="/edit_staff", method="post">
-            <table class="table table-primary centered">
+            <table class="table table-primary centered top">
                 <thead>
-                    <th>Edit</th>
-                    {% for column in columns %}
-                        <th>{{ column }}</th>
-                    {% endfor %}
+                    <tr>
+                        <th>Edit</th>
+                        {% for column in columns %}
+                            <th>{{ column }}</th>
+                        {% endfor %}
+                    </tr>
                 </thead>
                 <tbody>
                     {% for employee in staff %}
@@ -76,6 +81,7 @@
                 </tbody>
             </table>
             <div class="centered top">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button class="btn btn-success" type="submit">Edit this Person</button>
             </div>
         </form>

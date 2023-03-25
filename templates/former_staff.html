@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block title %} - Former Staff{% endblock %}
+
 {% block main %}
 
     <!-- Header -->
@@ -10,21 +12,25 @@
     <!-- Table -->
     <table class="table table-primary centered top">
         <thead>
-            {% for column in columns %}
-                <th>{{ column }}</th>
-            {% endfor %}
+            <tr>
+                {% for column in columns %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
         </thead>
         <tbody>
             {% for person in former_staff %}
                 <tr>
                     {% for key in person %}
-                        {% if person[key] == 'NULL' %}
+                        {% if person[key] == None %}
                             <td>--</td>
                         {% else %}
                             <td>{{ person[key] }}</td>
                         {% endif %}
                     {% endfor %}
                 </tr>
+            {% else %}
+                <div class="centered"><small>No results to display</small></div>
             {% endfor %}
         </tbody>
     </table>

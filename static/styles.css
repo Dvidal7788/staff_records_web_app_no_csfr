@@ -6,14 +6,15 @@
     text-align: center;
 }
 
-
 .form_class {
     margin-bottom: 10px;
 }
+
 #main_img {
     margin-top: 10px;
     border: 4px solid #ffffff;
     padding: 15px;
+    border-radius: 45px;
 }
 
 .form-label {

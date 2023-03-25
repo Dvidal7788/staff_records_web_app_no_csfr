@@ -46,6 +46,7 @@
 --     first_name VARCHAR(30) NOT NULL,
 --     last_name VARCHAR(30) NOT NULL,
 --     department VARCHAR(30),
+--     title VARCHAR(30),
 --     reason_for_leaving VARCHAR(30) NOT NULL,
 --     start_date DATE,
 --     end_date DATE,
@@ -109,12 +110,18 @@
 -- INSERT INTO salary VALUES (26, 90000);
 
 
+-- INSERT INTO former_staff VALUES (24, 'david', 'forrester', 'sales', 'sales manager', 'quit', '2022-10-10', '2023-01-02', 'Took offer from mortage company.');
+-- INSERT INTO former_staff VALUES (16, 'todd', 'hoffman', 'sales', 'sales manager', 'retired', '2022-07-25', '2023-01-16', NULL);
+-- INSERT INTO former_staff VALUES (13, 'tom', 'dusterson', 'it', 'software engineer', 'quit', '2022-07-11', '2023-02-10', 'Wife offered job at AWS; moving to Seattle.');
+-- INSERT INTO former_staff VALUES (19, 'dominic', 'evans', 'sales', 'sales associate', 'terminated', '2022-08-01', '2023-03-01', 'Terminated due to consistently low sales volume.');
+
+
 
 
 -- SELECT * FROM staff;
 -- SELECT * FROM salary;
 -- SELECT * FROM former_staff;
-UPDATE salary SET salary = 95000 WHERE emp_id = 26;
+-- UPDATE salary SET salary = 95000 WHERE emp_id = 26;
 
 -- SELECT * FROM departments;
 
@@ -122,9 +129,10 @@ UPDATE salary SET salary = 95000 WHERE emp_id = 26;
 -- ALTER TABLE former_employees
 -- RENAME TO former_staff;
 
--- DELETE FROM staff WHERE emp_id = 24;
--- DELETE FROM salary WHERE emp_id = 33 OR emp_id = 34;
--- DELETE FROM former_staff WHERE emp_id = 24;
+-- DELETE FROM staff WHERE emp_id = 36;
+-- DELETE FROM salary WHERE emp_id = 36;
+-- DELETE FROM salary WHERE emp_id = 37 OR emp_id = 38;
+-- DELETE FROM former_staff WHERE emp_id = 37 OR emp_id = 38;
 -- DELETE FROM staff WHERE last_name = 'huang' OR last_name = 'naim';
 
 
@@ -132,6 +140,7 @@ UPDATE salary SET salary = 95000 WHERE emp_id = 26;
 
 -- DELETE FROM salary;
 -- DELETE FROM former_staff;
+-- DELETE FROM former_staff WHERE emp_id = 36;
 
 -------------------------
 -- BACKEND:
@@ -159,6 +168,7 @@ UPDATE salary SET salary = 95000 WHERE emp_id = 26;
 
 
 -- DELETE FROM users;
+-- DELETE FROM users WHERE username = 'test123';
 -- DELETE FROM manager_pin;
 
 -- -- DROP

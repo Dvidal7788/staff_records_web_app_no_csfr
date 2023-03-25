@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block title %} - Add New Staff{% endblock %}
+
 {% block main %}
 
     {% if staff_added %}
@@ -30,6 +32,7 @@
         <input name="salary" type="number" placeholder="Salary" min="0" step=".01" class="form_class"><br>
         <label class="form-label top">Start Date</label><br>
         <input name="start_date" type="date" placeholder="Start Date" autocomplete="off" class="form_class"><br>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button class="btn btn-primary top" type="submit" class="form_class">Add Staff Member</button>
 
     </form>

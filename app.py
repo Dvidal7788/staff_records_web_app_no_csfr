@@ -1,13 +1,19 @@
 from flask import Flask, render_template, redirect, request, session
 from flask_session import Session
 from flask_mail import Mail, Message
+from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
 import sqlite3
 from datetime import datetime
 import os
+import re
 
 app = Flask(__name__)
+
+# Configure CSRF
+csrf = CSRFProtect(app)
+app.config['SECRET_KEY'] = os.urandom(12).hex()
 
 # Configure session
 app.config['SESSION_PERMANENT'] = False
@@ -38,19 +44,20 @@ class RemoveStaff():
     first_name: str
     last_name: str
     department: str
+    title: str
     reason: str
     end_date: str
     notes: str
 
     # Reset struct
     def reset(self):
-        self.emp_id = -1 # emp_id starts with 0, so -1 is effectively NULL
-        self.first_name = 'NULL' # Using string 'NULL' instead of NULL, bc can not set it to NULL
-        self.last_name = 'NULL'
-        self.department = 'NULL'
-        self.reason = 'NULL'
-        self.end_date = 'NULL'
-        self.notes = 'NULL'
+        self.emp_id = None
+        self.first_name = None
+        self.last_name = None
+        self.department = None
+        self.reason = None
+        self.end_date = None
+        self.notes = None
         return
 
 
@@ -92,11 +99,12 @@ def login_required(f):
 # Routes
 @app.route("/")
 def index():
-    if 'username' in session:
+
+    if not 'username' in session:
+        return render_template('index.html')
+    else:
         username = session['username']
         return render_template('index.html', username=username)
-    else:
-        return render_template('index.html')
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -108,11 +116,11 @@ def register():
 
     # POST
     else:
-        username = request.form.get('username')
+        username = request.form.get('username').strip()
         password = request.form.get('password')
         confirmation = request.form.get('confirmation')
         security_question = request.form.get('security_question')
-        security_answer = request.form.get('security_answer')
+        security_answer = request.form.get('security_answer').strip()
 
         # Confirm form filled out
         if not username and not password and not confirmation:
@@ -238,13 +246,16 @@ def login():
 
 @app.route("/logout")
 def logout():
+    global email_sent, staff_added, departments_all, registration_success, results
 
     # Reset globals and redirect to "/"
     session.clear()
     emp_to_remove.reset()
-    email_sent = staff_added = departments_all = registration_success = False
     for key in access:
         access[key] = False
+
+    email_sent = staff_added = departments_all = registration_success = False
+    results = None
 
     return redirect("/")
 
@@ -331,10 +342,10 @@ def add_new_staff():
 
     # POST
     else:
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
+        first_name = request.form.get('first_name').strip()
+        last_name = request.form.get('last_name').strip()
         department = request.form.get('department')
-        title = request.form.get('title')
+        title = request.form.get('title').strip()
         salary = request.form.get('salary')
         start_date = request.form.get('start_date')
 
@@ -346,10 +357,17 @@ def add_new_staff():
         # Get max emp_id
         db = sqlite3.connect("sql/staff.db")
         tmp_cursor = db.execute("SELECT MAX(emp_id) FROM staff")
+        tmp_cursor2 = db.execute("SELECT MAX(emp_id) FROM former_staff")
+
         for tmp_tuple in tmp_cursor:
             if tmp_tuple[0] == None:
                 new_id = 0
             else:
+                new_id = tmp_tuple[0] + 1
+
+        # Checking former_staff max emp_id ensures if the most recent employee added was recently let go (inwhich case the max emp_id will be a former employee), each employee, former and current each have a unique ID
+        for tmp_tuple in tmp_cursor2:
+            if tmp_tuple[0] >= new_id:
                 new_id = tmp_tuple[0] + 1
 
         # cur = db.cursor()
@@ -375,7 +393,6 @@ def all_staff():
 @login_required
 def departments():
     global departments_all
-    global export_criteria
     global email_sent
     global staff
     global results
@@ -390,7 +407,7 @@ def departments():
     if request.method == 'GET' and not departments_all:
         if email_sent:
             email_sent = False
-            return render_template('departments.html', departments=departments, columns=columns, username=session['username'], email_sent=True)
+            return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, username=session['username'], email_sent=True, display_results=True)
         else:
             return render_template('departments.html', departments=departments, columns=columns, landing_page=True, username=session['username'], email_sent=False)
 
@@ -455,7 +472,6 @@ def csv_export():
     # Remove any previous CSVs
     os.system('rm -f csv/*')
 
-    # global export_criteria
     global email_sent
 
     # Retrieve info from database
@@ -470,14 +486,17 @@ def csv_export():
     # Format
     staff = format_list(staff)
 
+    # Create timestamp (without milliseconds/microseconds normally present in datetime's standard format)
+    now = datetime.now()
+    timestamp = f'{now.date()}_{now.hour}:{now.minute}:{now.second}'
+
     # Create filename
-    file_path = f'csv/{deformat_str(results.department, False)}_{datetime.now()}.csv'
-    file_path = file_path.replace(' ', '_')
+    filename = f'{deformat_str(results.department, False)}_{timestamp}.csv'
 
     num_of_columns = len(staff_columns)
 
     # Write data to new csv file
-    with open(file_path, 'w') as file:
+    with open(f'csv/{filename}', 'w') as file:
 
         # Write header
         for i in range(num_of_columns):
@@ -500,16 +519,21 @@ def csv_export():
 
         # E-mail
         email = request.form.get('email')
+
+        # Validate email server side
+        if not re.search('^.+@.+\....$', email):
+            return redirect('/departments')
+
         message = Message('The csv file you requested', recipients=[email])
 
         if results.department != 'all':
             message.body = f"Here is the csv file you requested of:\n\nThe '{results.department}' Department sorted by '{results.sort_by}' ({results.asc_desc})."
         else:
-            message.body = f"Here is the csv file you requested of:\n\n'All departments' sorted by '{results.sort_by}'."
+            message.body = f"Here is the csv file you requested of:\n\n'All departments' sorted by '{results.sort_by}' ({results.asc_desc})."
 
         # Attach
-        with app.open_resource(file_path) as csv_fp:
-            message.attach(file_path, 'application/csv', csv_fp.read())
+        with app.open_resource(f'csv/{filename}') as csv_fp:
+            message.attach(filename, 'application/csv', csv_fp.read())
 
         # Send e-mail
         mail.send(message)
@@ -518,7 +542,7 @@ def csv_export():
         email_sent = True
 
         # Remove csv
-        os.remove(file_path)
+        # os.remove(file_path)
 
         return redirect("/departments")
 
@@ -534,7 +558,6 @@ def remove_staff():
     global employee_to_remove
 
     # GET
-
     if request.method == 'GET':
 
         if access['show_page3']:
@@ -607,6 +630,7 @@ def remove_staff():
                     emp_to_remove.first_name = first_name
                     emp_to_remove.last_name = last_name
                     emp_to_remove.department = department
+                    emp_to_remove.title = tmp_tuple[4]
                     emp_to_remove.reason = reason
                     emp_to_remove.end_date = end_date
                     if notes:
@@ -651,8 +675,8 @@ def remove_staff():
                     db.commit()
 
                     # Update former_employees table
-                    query = "INSERT INTO former_staff VALUES(?,?,?,?,?,?,?,?)"
-                    db.execute(query, (emp_to_remove.emp_id, emp_to_remove.first_name, emp_to_remove.last_name, emp_to_remove.department, emp_to_remove.reason, start_date, emp_to_remove.end_date, emp_to_remove.notes))
+                    query = "INSERT INTO former_staff VALUES(?,?,?,?,?,?,?,?,?)"
+                    db.execute(query, (emp_to_remove.emp_id, emp_to_remove.first_name, emp_to_remove.last_name, emp_to_remove.department, emp_to_remove.title, emp_to_remove.reason, start_date, emp_to_remove.end_date, emp_to_remove.notes))
                     db.commit()
 
 

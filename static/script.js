@@ -1,31 +1,25 @@
-function togglePasswordText() {
-    var x = document.getElementById("passwordInput");
-    if (x.type === "password") {
-      x.type = "text";
-    } else {
-      x.type = "password";
-    }
-  }
-
-
 function togglePasswordConfirmationText() {
-    var x = document.getElementById("passwordConfirmationInput");
-    if (x.type === "password") {
-      x.type = "text";
+  console.log(document.querySelector('.password-input'));
+  const passwordInputs = document.querySelectorAll('.password-input');
+
+  for (let input of passwordInputs) {
+    if (input.type === 'text') {
+      input.type = 'password';
     } else {
-      x.type = "password";
+      input.type = 'text';
     }
   }
+}
 
 
-// function togglePasswordConfirmationText() {
-//     var x = document.querySelector(".pass");
-//     for (i in x) {
-//       if (type[i] === "password") {
-//         type[i] = "text";
-//       } else {
-//         type[i] = "password";
-//       }
-//     }
+document.addEventListener('DOMContentLoaded', () => {
 
-//   }
+  // Retrieve checkbox
+  let checkbox = document.querySelector('#checkbox')
+
+  // Reset checkbox if page is refreshed (autocomplete="off" in HTML also works for this)
+  checkbox.checked = false;
+
+  // Set onclick to function
+  checkbox.onclick = togglePasswordConfirmationText;
+});

@@ -63,3 +63,18 @@
 # # print(tmp_cursor)
 # for item in tmp_cursor:
 #     print(item[0])
+
+
+# from datetime import datetime
+
+# now = datetime.now()
+# print(now)
+# print(now.time().hour)
+
+# import re
+# email = 'dave@gmail.com'
+
+# if re.search('.+@.+\..+', email):
+#     print('valid')
+# else:
+#     print('invalid')

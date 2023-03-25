@@ -1,0 +1,33 @@
+emp_id,first_name,last_name,department,title,start_date
+0,David,Vidal,Board of Directors,Director,2019-01-15
+1,Anna,Petraglia,Board of Directors,Director,2019-01-30
+2,Marilyn,Myers,Administration,Administrative Assistant,2019-08-26
+3,John,Ricenta,Sales,Sales Associate,2021-03-17
+4,Bob,Todensky,Sales,Sales Associate,2021-01-20
+5,Darnell,Higgins,IT,Programmer,2022-03-15
+6,Rachel,Carlotta,Client Implementation,Analyst,2022-04-20
+7,Marcy,Dickerson,Administration,Admistrative Assistant,2022-04-25
+8,Zach,Arbechler,Sales,Sales Manager,2022-04-25
+9,Everleigh,Webster,Human Resources,Employee Relations Manager,2022-05-02
+10,Francis,Espenoza,Marketing,Marketing Manager,2022-05-09
+11,Ericka,Johnston,Client Implementation,Analyst,2022-06-06
+12,Justin,Kim,Sales,Sales Associate,2022-06-13
+14,Marvin,Hinkler,Accounting,Accounting Assistant,2022-07-11
+15,Elvis,Petrovski,Accounting,Accountant,2022-07-18
+17,Elana,Shultz,Sales,Sales Associate,2022-07-25
+18,Kyle,Stewart,Sales,Sales Associate,2022-08-01
+20,Mary,Hall,Human Resources,Employee Relations Specialist,2022-08-22
+21,Randall,Moore,Sales,Sales Associate,2022-08-29
+22,Clarence,Ramirez,Sales,Sales Associate,2022-09-05
+23,Susan,Lee,Client Implementation,Analyst,2022-10-03
+25,Sonny,Alvarez,Marketing,Marketing Coordinator,2023-01-09
+26,Kristin,Halbech,IT,Web Developer,2023-01-16
+27,Alison,Ravina,Client Implementation,Client Specialist,2023-01-09
+28,Carmen,Austin,Sales,Sales Manager,2023-01-09
+29,Christopher,Grossman,Sales,Sales Associate,2023-02-01
+30,Carlos,Castillo,IT,Software Architect,2023-02-06
+31,Adriana,Calebresi,Administration,Administrative Assistant,2023-02-20
+32,Angelina,Rockford,Sales,Sales Associate,2023-03-13
+33,Fatima,Naim,Client Implementation,Client Specialist,2023-03-13
+34,Allen,Huang,Sales,Sales Manager,2023-03-20
+35,Dewayne,Morris,Accounting,Accounting Assistant,2023-03-20
