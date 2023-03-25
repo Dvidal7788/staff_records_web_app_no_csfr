@@ -19,7 +19,7 @@ DEPARTMENTS:
   - This route lets you choose any department (or all departments) and sort the staff names by various criteria.
        - The desired data is retrieved from a SQL database and displayed on screen.
   - You may click the up/down arrows by any column to re-sort.
-  - You may type your email in the text field to have an CSV of the chosen department (sorted by the criteria of your choosing) sent to your e-mail.
+  - You may type your email in the text field to have a CSV of the chosen department (sorted by the criteria of your choosing) sent to your e-mail.
   - You may also click the Download CSV button to be redirected to download the CSV
 
 ALL DEPARTMENTS
@@ -29,11 +29,11 @@ ALL DEPARTMENTS
 Add NEW STAFF:
 /add_new_staff
   - Enter the required information of a staff member.
-  - The staff member will be added to the appopriate SQL databases and you will see their information populate in the any of the apporpriate routes.
+  - The staff member will be added to the appropriate SQL databases and you will see their information populate in the any of the apporpriate routes.
 
 REMOVE STAFF:
 /remove_staff
-   - A manager PIN is required to remove a staff member. However, for this demo, you may use '0000' to test this feature out!
+   - A manager PIN is typically required to remove a staff member. However, for this demo, you may use '0000' to test this feature out!
    - Once a staff member is removed, their information is added to a former_staff database, which you can access from the /former_staff route
    
 
@@ -45,8 +45,10 @@ STAFF_LOOKUP:
    
 EDIT STAFF:
 /edit_staff
-   - First search for the staff member you wish to edit, using a similar method to staff_lookup (typing partial information will display all matchin results)
    - This route allows you to edit any of the staff information
+     - First search for the staff member you wish to edit, using a similar method to staff_lookup (typing partial information will display all matchin results)
+     - Next, select the staff member you wish to edit.
+     - Last, select the item you wish to edit and type in the new value you wish to assign to that item.
    
 SALARY:
 /salary
