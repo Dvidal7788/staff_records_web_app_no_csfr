@@ -16,26 +16,26 @@
   
 <h1>Routes:</h1>
 
-<h4>REGISTER:</h4>
+<h5>REGISTER:</h5>
 <h6>/register</h6>
    - Simply create a username and password to register
    - Select a security question. This will be used if you ever forget your password or need to reset your password.
 
-LOGIN:
-/login
+<h5>LOGIN:</h5>
+<h6>/login</h6>
    - Once you have registered, you will be redirected to the login page.
    - If you forget your password, you can always reset it using you security question. Click 'Forgot Password/Reset Password' from the login page to do this.
  
-DEPARTMENTS:
-/departments
+<h5>DEPARTMENTS:</h5>
+<h6>/departments/<h6>
   - This route lets you choose any department (or all departments) and sort the staff names by various criteria.
        - The desired data is retrieved from a SQL database and displayed on screen.
   - You may click the up/down arrows by any column to re-sort.
   - You may type your email in the text field to have a CSV of the chosen department (sorted by the criteria of your choosing) sent to your e-mail.
   - You may also click the Download CSV button to be redirected to download the CSV
 
-ALL DEPARTMENTS
-/all_departments
+<h5>ALL DEPARTMENTS</h5>
+<h6>/all_departments</h6>
   - This route redirects you to /departments, automatically populating the all departments option.
  
 Add NEW STAFF:
