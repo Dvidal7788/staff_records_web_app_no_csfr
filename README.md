@@ -2,7 +2,7 @@
 <h3>This web app allows the user to query/update staff records SQL database</h3>
 <h6>Designed & Written by David Manuel Vidal</h6>
 
-ALL STAFF NAMES IN THE DATABASE ARE FOR DEMO PURPOSES ONLY. THEY DO NOT REPRESENT REAL PEOPLE.
+(ALL STAFF NAMES IN THE DATABASE ARE FOR DEMO PURPOSES ONLY. THEY DO NOT REPRESENT REAL PEOPLE.)
 
 To Run:
 - Navigate to staff_recods_web_app/ directory
@@ -13,7 +13,17 @@ To Test App:
   - Register in /register, then login and explore!
   
   
- Routes:
+<h1>Routes:</h1>
+
+REGISTER:
+/register
+   - Simply create a username and password to register
+   - Select a security question. This will be used if you ever forget your password or need to reset your password.
+
+LOGIN:
+/login
+   - Once you have registered, you will be redirected to the login page.
+   - If you forget your password, you can always reset it using you security question. Click 'Forgot Password/Reset Password' from the login page to do this.
  
 DEPARTMENTS:
 /departments
