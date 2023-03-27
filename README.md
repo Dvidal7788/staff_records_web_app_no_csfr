@@ -14,7 +14,7 @@
 
 <h3>To Test App:</h3>
 <ul>
-  <li>Register in /register, then login and explore!</li>
+  <li>Click the Register in /register, then login and explore!</li>
 </ul>
   
   
