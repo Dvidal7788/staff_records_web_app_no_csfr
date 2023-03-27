@@ -7,7 +7,7 @@
 <h3>To Run:</h3>
 <ul>
   <li>Download this repository</li>
-  <li>Navigate to staff_recods_web_app/ directory</li>
+  <li>Navigate to the 'staff_recods_web_app/' directory</li>
   <li>type flask run in terminal (if you do not already have flask, run pip install flask and pip install Flask-Mail)</li>
   <li>copy/paste URL into browser</li>
 </ul>
