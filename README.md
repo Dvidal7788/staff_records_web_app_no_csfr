@@ -14,7 +14,8 @@
 
 <h3>To Test App:</h3>
 <ul>
-  <li>Click the Register in /register, then login and explore!</li>
+  <li>Click the 'Register' link in the top right corner</li>
+  <li>Register, then log in</li>
 </ul>
 ![Register Screenshot](https://drive.google.com/file/d/18q-YDsYbYcoI5EYGKDxnELyV084ylRxi/view?usp=sharing)
   
