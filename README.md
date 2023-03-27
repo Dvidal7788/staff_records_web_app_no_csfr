@@ -32,8 +32,10 @@
 <h5>LOGIN:</h5>
 <h6>/login</h6>
 <ul>
+   <h6>
    <li>Once you have registered, you will be redirected to the login page.</li>
    <li>If you forget your password, you can always reset it using you security question. Click 'Forgot Password/Reset Password' from the login page to do this.</li>
+   </h6>
 </ul>
 
 <h5>DEPARTMENTS:</h5>
@@ -51,7 +53,9 @@
 <h5>ALL DEPARTMENTS</h5>
 <h6>/all_departments</h6>
   <ul>
+    <h6>
     <li>This route redirects you to /departments, automatically populating the all departments option.</li>
+    </h6>
   </ul>
  
 <h5>Add NEW STAFF:</h5>
