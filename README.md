@@ -1,6 +1,6 @@
 # staff_records_web_app
 Web app to query/update staff records SQL database<br>
-<small>Designed & Written by David Manuel Vidal</small>
+<h6>Designed & Written by David Manuel Vidal</h6>
 
 ALL STAFF NAMES IN THE DATABASE ARE FOR DEMO PURPOSES ONLY. THEY DO NOT REPRESENT REAL PEOPLE.
 
