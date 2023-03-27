@@ -68,18 +68,25 @@
 
 <h5>STAFF_LOOKUP:</h5>
 <h6>/staff_lookup</h6>
-   - This route allows you type in partial information to find any staff member.
-        - (i.e. if 'ar' is typed in the text field and 'First Name' is selected from the dropdown menu, all staff members with 'ar' anywhere in their first name will be displayed).
-   - All staff members who match the search criteria will populate
+  <ul>
+  ` <li>This route allows you type in partial information to find any staff member.</li>
+    <li>(i.e. if 'ar' is typed in the text field and 'First Name' is selected from the dropdown menu, all staff members with 'ar' anywhere in their first name will be displayed).</li>
+   `<li>All staff members who match the search criteria will populate</li>
+  </ul>
    
 <h5>EDIT STAFF:</h5>
 <h6>/edit_staff</h6>
-   - This route allows you to edit any of the staff information
-     - First search for the staff member you wish to edit, using a similar method to staff_lookup (typing partial information will display all matchin results)
-     - Next, select the staff member you wish to edit.
-     - Last, select the item you wish to edit and type in the new value you wish to assign to that item.
+  
+  <ul>
+    <li>This route allows you to edit any of the staff information</li>
+    <li>First search for the staff member you wish to edit, using a similar method to staff_lookup (typing partial information will display all matchin results)</li>
+    <li>Next, select the staff member you wish to edit.</li>
+    <li>Last, select the item you wish to edit and type in the new value you wish to assign to that item.</li>
+  </ul>
    
 <h5>SALARY:</h5>
 <h6>/salary</h6>
-    - This route simply displays a table of all staff members and their corresponding salaries.
+  <ul>
+    <li>This route simply displays a table of all staff members and their corresponding salaries.</li>
+  </ul>
   
