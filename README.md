@@ -44,6 +44,7 @@
   <li>You may click the up/down arrows by any column to re-sort.</li>
   <li>You may type your email in the text field to have a CSV of the chosen department (sorted by the criteria of your choosing) sent to your e-mail.</li>
   <li>You may also click the Download CSV button to be redirected to download the CSV</li>
+</ul>
 
 <h5>ALL DEPARTMENTS</h5>
 <h6>/all_departments</h6>
