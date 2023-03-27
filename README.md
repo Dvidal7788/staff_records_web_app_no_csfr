@@ -16,6 +16,7 @@
 <ul>
   <li>Click the Register in /register, then login and explore!</li>
 </ul>
+![Register Screenshot](https://drive.google.com/file/d/18q-YDsYbYcoI5EYGKDxnELyV084ylRxi/view?usp=sharing)
   
   
 <h1>Routes:</h1>
