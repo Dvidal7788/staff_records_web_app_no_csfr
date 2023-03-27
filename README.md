@@ -16,8 +16,8 @@
   
 <h1>Routes:</h1>
 
-REGISTER:
-/register
+<h4>REGISTER:</h4>
+<h6>/register</h6>
    - Simply create a username and password to register
    - Select a security question. This will be used if you ever forget your password or need to reset your password.
 
