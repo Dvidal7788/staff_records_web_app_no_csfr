@@ -5,6 +5,7 @@
 (ALL STAFF NAMES IN THE DATABASE ARE FOR DEMO PURPOSES ONLY. THEY DO NOT REPRESENT REAL PEOPLE.)
 
 <h3>To Run:</h3>
+- Download this repository
 - Navigate to staff_recods_web_app/ directory
 - type flask run in terminal (if you do not already have flask, run pip install flask and pip install Flask-Mail)
 - copy/paste URL into browser
