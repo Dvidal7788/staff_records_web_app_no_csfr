@@ -28,6 +28,7 @@
    <li>Simply create a username and password to register</li>
    <li>Select a security question. This will be used if you ever forget your password or need to reset your password.</li>
 </ul>
+<br>
 
 <h5>LOGIN:</h5>
 <h6>/login</h6>
@@ -37,6 +38,7 @@
    <li>If you forget your password, you can always reset it using you security question. Click 'Forgot Password/Reset Password' from the login page to do this.</li>
    </h6>
 </ul>
+<br>
 
 <h5>DEPARTMENTS:</h5>
 <h6>/departments</h6>
@@ -49,6 +51,7 @@
   <li>You may also click the Download CSV button to be redirected to download the CSV</li>
   </h6>
 </ul>
+<br>
 
 <h5>ALL DEPARTMENTS</h5>
 <h6>/all_departments</h6>
@@ -57,6 +60,7 @@
     <li>This route redirects you to /departments, automatically populating the all departments option.</li>
     </h6>
   </ul>
+  <br>
  
 <h5>Add NEW STAFF:</h5>
 <h6>/add_new_staff</h6>
@@ -66,6 +70,7 @@
     <li>The staff member will be added to the appropriate SQL databases and you will see their information populate in the any of the apporpriate routes.</li>
     </h6>
   </ul>
+  <br>
 
 <h5>REMOVE STAFF:</h5>
 <h6>/remove_staff</h6>
@@ -75,6 +80,7 @@
    <li>Once a staff member is removed, their information is added to a former_staff database, which you can access from the /former_staff route</li>
    </h6>  
   </ul>
+  <br>
    
 
 <h5>STAFF_LOOKUP:</h5>
@@ -86,6 +92,7 @@
    `<li>All staff members who match the search criteria will populate</li>
   ``</h6>
   </ul>
+  <br>
    
 <h5>EDIT STAFF:</h5>
 <h6>/edit_staff</h6>
@@ -98,6 +105,7 @@
     <li>Last, select the item you wish to edit and type in the new value you wish to assign to that item.</li>
     <h6>  
   </ul>
+  <br>
    
 <h5>SALARY:</h5>
 <h6>/salary</h6>
