@@ -6,14 +6,16 @@
 
 <h3>To Run:</h3>
 <ul>
-  <li>- Download this repository</li>
-  <li>- Navigate to staff_recods_web_app/ directory</li>
-  <li>- type flask run in terminal (if you do not already have flask, run pip install flask and pip install Flask-Mail)</li>
-  <li>- copy/paste URL into browser</li>
+  <li>Download this repository</li>
+  <li>Navigate to staff_recods_web_app/ directory</li>
+  <li>type flask run in terminal (if you do not already have flask, run pip install flask and pip install Flask-Mail)</li>
+  <li>copy/paste URL into browser</li>
 </ul>
 
 <h3>To Test App:</h3>
-  - Register in /register, then login and explore!
+<ul>
+  <li>Register in /register, then login and explore!</li>
+</ul>
   
   
 <h1>Routes:</h1>
