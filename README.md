@@ -1,6 +1,6 @@
 # staff_records_web_app
 <div>
-<h3>Web app to query/update staff records SQL database</h3><br>
+<h3>Web app to query/update staff records SQL database</h3>
 <h6>Designed & Written by David Manuel Vidal</h6>
 </div>
 
