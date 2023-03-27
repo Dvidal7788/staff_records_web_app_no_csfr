@@ -5,10 +5,12 @@
 <h4>This web app allows the user to query/update staff records SQL database</h4>
 
 <h3>To Run:</h3>
-- Download this repository
-- Navigate to staff_recods_web_app/ directory
-- type flask run in terminal (if you do not already have flask, run pip install flask and pip install Flask-Mail)
-- copy/paste URL into browser
+<ul>
+  <li>- Download this repository</li>
+  <li>- Navigate to staff_recods_web_app/ directory</li>
+  <li>- type flask run in terminal (if you do not already have flask, run pip install flask and pip install Flask-Mail)</li>
+  <li>- copy/paste URL into browser</li>
+</ul>
 
 <h3>To Test App:</h3>
   - Register in /register, then login and explore!
