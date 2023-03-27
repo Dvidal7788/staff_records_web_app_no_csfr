@@ -37,7 +37,7 @@
 </ul>
 
 <h5>DEPARTMENTS:</h5>
-<h6>/departments<h6>
+<h6>/departments</h6>
 <ul>
   <li>This route lets you choose any department (or all departments) and sort the staff names by various criteria.</li>
   <li>The desired data is retrieved from a SQL database and displayed on screen.</li>
