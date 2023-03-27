@@ -4,12 +4,12 @@
 
 (ALL STAFF NAMES IN THE DATABASE ARE FOR DEMO PURPOSES ONLY. THEY DO NOT REPRESENT REAL PEOPLE.)
 
-To Run:
+<h2>To Run:</h2>
 - Navigate to staff_recods_web_app/ directory
 - type flask run in terminal (if you do not already have flask, run pip install flask and pip install Flask-Mail)
 - copy/paste URL into browser
 
-To Test App:
+<h2>To Test App:</h2>
   - Register in /register, then login and explore!
   
   
