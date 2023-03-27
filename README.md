@@ -1,9 +1,8 @@
 # staff_records_web_app
+<h6>Designed & Written by David Manuel Vidal</h6>
+<h6>(ALL STAFF NAMES IN THE DATABASE ARE FOR DEMO PURPOSES ONLY. THEY DO NOT REPRESENT REAL PEOPLE.)</h6>
 <h3>Purpose:</h3>
 <h4>This web app allows the user to query/update staff records SQL database</h4>
-<h6>Designed & Written by David Manuel Vidal</h6>
-
-(ALL STAFF NAMES IN THE DATABASE ARE FOR DEMO PURPOSES ONLY. THEY DO NOT REPRESENT REAL PEOPLE.)
 
 <h3>To Run:</h3>
 - Download this repository
