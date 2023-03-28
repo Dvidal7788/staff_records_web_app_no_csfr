@@ -68,7 +68,7 @@
 <h6>/all_departments</h6>
   <ul>
     <h6>
-    <li>This route redirects you to /departments, automatically populating the all departments option.</li>
+    <li>This route redirects you to /departments, automatically populating the 'All Departments' option.</li>
     </h6>
   </ul>
   <br>
