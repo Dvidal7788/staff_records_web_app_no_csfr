@@ -17,6 +17,8 @@
   <li>Click the 'Register' link in the top right corner</li>
   <li>Register, then log in</li>
 </ul>
+
+<img src="https://drive.google.com/file/d/1GokryXBk8ZkFv7K1t7bvS4c9Xp6V84p8/view?usp=sharing" width="350" alt="accessibility text">
 ![Register Screenshot](https://drive.google.com/file/d/18q-YDsYbYcoI5EYGKDxnELyV084ylRxi/view?usp=sharing)
   
   
