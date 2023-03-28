@@ -58,7 +58,7 @@
   <li>The desired data is retrieved from a SQL database and displayed on screen.</li>
   <li>You may click the up/down arrows by any column to re-sort.</li>
   <li>You may type your email in the text field to have a CSV of the chosen department (sorted by the criteria of your choosing) sent to your e-mail.</li>
-  <li>You may also click the Download CSV button to be redirected to download the CSV</li>
+  <li>You may also click the Download CSV button to be redirected to download the CSV directly.</li>
   </h6>
 </ul>
 ![image_departments](https://user-images.githubusercontent.com/91298183/228103108-a905fe32-c4d3-4349-bc75-3d15e9f6d4ae.png)
