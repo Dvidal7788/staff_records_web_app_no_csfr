@@ -25,7 +25,7 @@
 
 <h5>MAIN PAGE:</h5>
 <h6>After logging in, you can access any route from the navigation bar at the top of the screen.</h6>
-![main page](https://user-images.githubusercontent.com/91298183/228104671-ddae764b-a7e5-4c6b-a210-1e0ab144f7db.png)
+![image_main page](https://user-images.githubusercontent.com/91298183/228104671-ddae764b-a7e5-4c6b-a210-1e0ab144f7db.png)
 
 <h5>REGISTER:</h5>
 <h6>/register</h6>
@@ -33,7 +33,7 @@
    <li>Simply create a username and password to register</li>
    <li>Select a security question. This will be used if you ever forget your password or need to reset your password.</li>
 </ul>
-![register](https://user-images.githubusercontent.com/91298183/228103045-c99231a8-5765-4fe7-becc-3322928c74b1.png)
+![image_register](https://user-images.githubusercontent.com/91298183/228103045-c99231a8-5765-4fe7-becc-3322928c74b1.png)
 <br>
 
 <h5>LOGIN:</h5>
@@ -44,7 +44,7 @@
    <li>If you forget your password, you can always reset it using you security question. Click 'Forgot Password/Reset Password' from the login page to do this.</li>
    </h6>
 </ul>
-![login](https://user-images.githubusercontent.com/91298183/228103086-ff47c144-cebe-4c8f-91df-e18ee3a8c63e.png)
+![image_login](https://user-images.githubusercontent.com/91298183/228103086-ff47c144-cebe-4c8f-91df-e18ee3a8c63e.png)
 <br>
 
 <h5>DEPARTMENTS:</h5>
@@ -58,7 +58,7 @@
   <li>You may also click the Download CSV button to be redirected to download the CSV</li>
   </h6>
 </ul>
-![departments](https://user-images.githubusercontent.com/91298183/228103108-a905fe32-c4d3-4349-bc75-3d15e9f6d4ae.png)
+![image_departments](https://user-images.githubusercontent.com/91298183/228103108-a905fe32-c4d3-4349-bc75-3d15e9f6d4ae.png)
 <br>
 
 <h5>ALL DEPARTMENTS</h5>
@@ -78,7 +78,7 @@
     <li>The staff member will be added to the appropriate SQL databases and you will see their information populate in the any of the apporpriate routes.</li>
     </h6>
   </ul>
-  ![add_new_staff](https://user-images.githubusercontent.com/91298183/228103805-621db232-495e-4635-8f51-cc418a12d766.png)
+  ![image_add_new_staff](https://user-images.githubusercontent.com/91298183/228103805-621db232-495e-4635-8f51-cc418a12d766.png)
   <br>
 
 <h5>REMOVE STAFF:</h5>
@@ -89,7 +89,7 @@
    <li>Once a staff member is removed, their information is added to a former_staff database, which you can access from the /former_staff route</li>
    </h6>  
   </ul>
-  ![remove_staff_page1](https://user-images.githubusercontent.com/91298183/228103127-909b890a-2fa7-4e52-94b2-b02dd67fa099.png)
+  ![image_remove_staff_page1](https://user-images.githubusercontent.com/91298183/228103127-909b890a-2fa7-4e52-94b2-b02dd67fa099.png)
   <br>
    
 
@@ -115,7 +115,7 @@
     <li>Last, select the item you wish to edit and type in the new value you wish to assign to that item.</li>
     <h6>  
   </ul>
-  ![edit_staff_page2](https://user-images.githubusercontent.com/91298183/228103182-fcf2639b-16ae-4146-ab5a-822a047359f5.png)
+  ![image_edit_staff_page2](https://user-images.githubusercontent.com/91298183/228103182-fcf2639b-16ae-4146-ab5a-822a047359f5.png)
   <br>
    
 <h5>SALARY:</h5>
