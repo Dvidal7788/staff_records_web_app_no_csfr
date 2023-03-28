@@ -6,7 +6,7 @@
 <h4>This web app allows the user to query/update staff records SQL database</h4>
 
 
-<img href="https://drive.google.com/file/d/1GokryXBk8ZkFv7K1t7bvS4c9Xp6V84p8/view">
+<img href="https://drive.google.com/file/d/1GokryXBk8ZkFv7K1t7bvS4c9Xp6V84p8/view" />
 <h3>To Run:</h3>
 <ul>
   <li>Download this repository</li>
