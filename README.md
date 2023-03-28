@@ -131,4 +131,13 @@
     <li>This route simply displays a table of all staff members and their corresponding salaries.</li>
     <h6>
   </ul>
+      
+      
+<h5>FORMER STAFF:</h5>
+<h6>/former_staff</h6>
+  <ul>
+    <h6>
+    <li>This route simply displays a table of all former staff members.</li>
+    <h6>
+  </ul>
   
