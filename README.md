@@ -4,6 +4,8 @@
 <h6>(All names in this database are for demo purposes only. They do not represent real people.)</h6>
 <h3>Purpose:</h3>
 <h4>This web app allows the user to query/update staff records SQL database</h4>
+![image](https://user-images.githubusercontent.com/91298183/228102685-6e4693c0-202c-4211-afce-f3a6f9f9cc72.png)
+
 
 <h3>To Run:</h3>
 <ul>
