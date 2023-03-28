@@ -23,6 +23,10 @@
   
 <h1>Routes:</h1>
 
+<h5>MAIN PAGE:</h5>
+<h6>After logging in, you can access any route from the navigation bar at the top of the screen.</h6>
+  ![main page](https://user-images.githubusercontent.com/91298183/228104050-93b068be-b053-42ec-b36a-cfd8b477e8a0.png)
+
 <h5>REGISTER:</h5>
 <h6>/register</h6>
 <ul>
