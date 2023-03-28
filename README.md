@@ -74,6 +74,7 @@
     <li>The staff member will be added to the appropriate SQL databases and you will see their information populate in the any of the apporpriate routes.</li>
     </h6>
   </ul>
+  ![add_new_staff](https://user-images.githubusercontent.com/91298183/228103805-621db232-495e-4635-8f51-cc418a12d766.png)
   <br>
 
 <h5>REMOVE STAFF:</h5>
