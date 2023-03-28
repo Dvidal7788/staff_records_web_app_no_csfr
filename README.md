@@ -29,6 +29,7 @@
    <li>Simply create a username and password to register</li>
    <li>Select a security question. This will be used if you ever forget your password or need to reset your password.</li>
 </ul>
+![register](https://user-images.githubusercontent.com/91298183/228103045-c99231a8-5765-4fe7-becc-3322928c74b1.png)
 <br>
 
 <h5>LOGIN:</h5>
@@ -39,6 +40,7 @@
    <li>If you forget your password, you can always reset it using you security question. Click 'Forgot Password/Reset Password' from the login page to do this.</li>
    </h6>
 </ul>
+![login](https://user-images.githubusercontent.com/91298183/228103086-ff47c144-cebe-4c8f-91df-e18ee3a8c63e.png)
 <br>
 
 <h5>DEPARTMENTS:</h5>
@@ -52,6 +54,7 @@
   <li>You may also click the Download CSV button to be redirected to download the CSV</li>
   </h6>
 </ul>
+![departments](https://user-images.githubusercontent.com/91298183/228103108-a905fe32-c4d3-4349-bc75-3d15e9f6d4ae.png)
 <br>
 
 <h5>ALL DEPARTMENTS</h5>
@@ -81,6 +84,7 @@
    <li>Once a staff member is removed, their information is added to a former_staff database, which you can access from the /former_staff route</li>
    </h6>  
   </ul>
+  ![remove_staff_page1](https://user-images.githubusercontent.com/91298183/228103127-909b890a-2fa7-4e52-94b2-b02dd67fa099.png)
   <br>
    
 
@@ -106,6 +110,7 @@
     <li>Last, select the item you wish to edit and type in the new value you wish to assign to that item.</li>
     <h6>  
   </ul>
+  ![edit_staff_page2](https://user-images.githubusercontent.com/91298183/228103182-fcf2639b-16ae-4146-ab5a-822a047359f5.png)
   <br>
    
 <h5>SALARY:</h5>
