@@ -117,11 +117,12 @@
     <h6>
     <li>This route allows you to edit any of the staff information</li>
     <li>First, search for the staff member you wish to edit, using a similar method to staff_lookup (typing partial information will display all matchin results)</li>
-    <li>Next, select the staff member you wish to edit.</li>
-    <li>Last, select the item you wish to edit and type in the new value you wish to assign to that item.</li>
+    <li>Next, select the staff member you wish to edit. (As shown in the example image below.)</li>
+    <li>Last, select the item you wish to edit and type in the new value you wish to assign to that item. (As shown in the 2nd example image below.)</li>
     <h6>  
   </ul>
   ![image_edit_staff_page2](https://user-images.githubusercontent.com/91298183/228103182-fcf2639b-16ae-4146-ab5a-822a047359f5.png)
+    <br>
   ![edit_staff_page3](https://user-images.githubusercontent.com/91298183/228335756-3f01ef2b-4fda-4914-91b3-9bfc92262d04.png)
     <br>
 
