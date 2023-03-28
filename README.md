@@ -27,7 +27,7 @@
    <li>Simply create a username and password to register</li>
    <li>Select a security question. This will be used if you ever forget your password or need to reset your password.</li>
 </ul>
-![register](https://user-images.githubusercontent.com/91298183/228102228-ae8b3447-d20a-4d22-845e-59a78398b548.png)
+![register](https://user-images.githubusercontent.com/91298183/228102228-ae8b3447-d20a-4d22-845e-59a78398b548.png?raw=true)
 <br>
 
 <h5>LOGIN:</h5>
