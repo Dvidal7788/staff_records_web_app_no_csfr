@@ -25,7 +25,7 @@
 
 <h5>MAIN PAGE:</h5>
 <h6>After logging in, you can access any route from the navigation bar at the top of the screen.</h6>
-  ![main page](https://user-images.githubusercontent.com/91298183/228104050-93b068be-b053-42ec-b36a-cfd8b477e8a0.png)
+![main page](https://user-images.githubusercontent.com/91298183/228104671-ddae764b-a7e5-4c6b-a210-1e0ab144f7db.png)
 
 <h5>REGISTER:</h5>
 <h6>/register</h6>
