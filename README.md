@@ -4,9 +4,9 @@
 <h6>(All names in this database are for demo purposes only. They do not represent real people.)</h6>
 <h3>Purpose:</h3>
 <h4>This web app allows the user to query/update staff records SQL database</h4>
-![image](https://user-images.githubusercontent.com/91298183/228102685-6e4693c0-202c-4211-afce-f3a6f9f9cc72.png)
 
 
+<img href="https://drive.google.com/file/d/1GokryXBk8ZkFv7K1t7bvS4c9Xp6V84p8/view">
 <h3>To Run:</h3>
 <ul>
   <li>Download this repository</li>
@@ -29,7 +29,6 @@
    <li>Simply create a username and password to register</li>
    <li>Select a security question. This will be used if you ever forget your password or need to reset your password.</li>
 </ul>
-![register](https://user-images.githubusercontent.com/91298183/228102228-ae8b3447-d20a-4d22-845e-59a78398b548.png?raw=true)
 <br>
 
 <h5>LOGIN:</h5>
