@@ -1,7 +1,7 @@
 # staff_records_web_app
 
 <h6>Designed & Written by David Manuel Vidal</h6>
-<h6>(All names in this database are for demo purposes only. They do not represent real people.)</h6>
+<h6>(All names in the database are for demo purposes only. They do not represent real people.)</h6>
 <h3>Purpose:</h3>
 <h4>This web app allows the user to query/update staff records SQL database</h4>
 
@@ -20,6 +20,7 @@
   <li>Click the 'Register' link in the top right corner</li>
   <li>Register, then log in</li>
 </ul>
+<br>
   
 <h1>Routes:</h1>
 
