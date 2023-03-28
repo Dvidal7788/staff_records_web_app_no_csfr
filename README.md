@@ -114,7 +114,7 @@
   <ul>
     <h6>
     <li>This route allows you to edit any of the staff information</li>
-    <li>First search for the staff member you wish to edit, using a similar method to staff_lookup (typing partial information will display all matchin results)</li>
+    <li>First, search for the staff member you wish to edit, using a similar method to staff_lookup (typing partial information will display all matchin results)</li>
     <li>Next, select the staff member you wish to edit.</li>
     <li>Last, select the item you wish to edit and type in the new value you wish to assign to that item.</li>
     <h6>  
