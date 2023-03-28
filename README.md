@@ -101,10 +101,10 @@
   <ul>
     <h6>
     <li>This route allows you type in partial information to find any staff member.</li>
-    <ul>
-      <li>(i.e. if 'ar' is typed into the text field and 'First Name' is selected from the dropdown menu, all staff members with 'ar' anywhere in their first name will be displayed).</li>
-      </ul>
     <li>All staff members who match the search criteria will populate</li>
+    <ul>
+      <li>(e.g. if 'ar' is typed into the text field and 'First Name' is selected from the dropdown menu, all staff members with 'ar' anywhere in their first name will be displayed).</li>
+      </ul>
     </h6>
   </ul>
   ![staff_look_up](https://user-images.githubusercontent.com/91298183/228105064-137a4dd4-41d9-4e14-8264-521dd0bd9b56.png)
