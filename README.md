@@ -103,7 +103,7 @@
     <li>This route allows you type in partial information to find any staff member.</li>
     <li>All staff members who match the search criteria will populate</li>
     <ul>
-      <li>(e.g. if 'ar' is typed into the text field and 'First Name' is selected from the dropdown menu, all staff members with 'ar' anywhere in their first name will be displayed).</li>
+      <li>(e.g. if 'ar' is typed into the text field and 'First Name' is selected from the dropdown menu, all staff members with 'ar' anywhere in their first name will be displayed, as shown in the example image below.).</li>
       </ul>
     </h6>
   </ul>
