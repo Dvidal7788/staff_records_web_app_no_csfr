@@ -122,7 +122,9 @@
     <h6>  
   </ul>
   ![image_edit_staff_page2](https://user-images.githubusercontent.com/91298183/228103182-fcf2639b-16ae-4146-ab5a-822a047359f5.png)
+  ![image_edit_staff_page3](https://user-images.githubusercontent.com/91298183/228334922-d25fe59c-629e-4221-a797-3d994919f594.png)
   <br>
+
    
 <h5>SALARY:</h5>
 <h6>/salary</h6>
@@ -131,7 +133,8 @@
     <li>This route simply displays a table of all staff members and their corresponding salaries.</li>
     <h6>
   </ul>
-      
+  ![salaries](https://user-images.githubusercontent.com/91298183/228335231-d9d114e3-1420-4ca9-9072-5355aa98c3e8.png)
+
       
 <h5>FORMER STAFF:</h5>
 <h6>/former_staff</h6>
@@ -140,4 +143,4 @@
     <li>This route simply displays a table of all former staff members.</li>
     <h6>
   </ul>
-  
+  ![former_staff](https://user-images.githubusercontent.com/91298183/228335014-1d4a9ac9-94bd-45f0-a6d6-c8efd7cdbd19.png)
