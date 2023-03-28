@@ -1,4 +1,5 @@
 # staff_records_web_app
+
 <h6>Designed & Written by David Manuel Vidal</h6>
 <h6>(All names in this database are for demo purposes only. They do not represent real people.)</h6>
 <h3>Purpose:</h3>
@@ -17,10 +18,6 @@
   <li>Click the 'Register' link in the top right corner</li>
   <li>Register, then log in</li>
 </ul>
-
-<img src="https://drive.google.com/file/d/1GokryXBk8ZkFv7K1t7bvS4c9Xp6V84p8/view?usp=sharing" width="350" alt="accessibility text">
-![Register Screenshot](https://drive.google.com/file/d/18q-YDsYbYcoI5EYGKDxnELyV084ylRxi/view?usp=sharing)
-  
   
 <h1>Routes:</h1>
 
@@ -30,6 +27,7 @@
    <li>Simply create a username and password to register</li>
    <li>Select a security question. This will be used if you ever forget your password or need to reset your password.</li>
 </ul>
+![register](https://user-images.githubusercontent.com/91298183/228102228-ae8b3447-d20a-4d22-845e-59a78398b548.png)
 <br>
 
 <h5>LOGIN:</h5>
