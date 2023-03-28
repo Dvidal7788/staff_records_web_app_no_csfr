@@ -17,7 +17,7 @@
 
 <h3>To Test App:</h3>
 <ul>
-  <li>Click the 'Register' link in the top right corner</li>
+  <li>Once the app is running in your browser, click the 'Register' link in the top right corner</li>
   <li>Register, then log in</li>
 </ul>
 <br>
