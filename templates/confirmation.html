@@ -4,14 +4,38 @@
 
 {% block main %}
 
+
+    <!-- HEADER -->
     <h1 class="centered" style="margin-top: 20px">{{ message }}</h1>
     <br>
     <h3 class="centered" style="margin-top: 5px">{{ message2 }}</h3>
 
-    <form class="centered top" action="/edit_staff" method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button name="confirm_edit" class="btn btn-danger" type="submit" value="no">No</button>
-        <button name="confirm_edit" class="btn btn-success" type="submit" value="yes" >Yes</button>
-    </form>
+    <!-- YES/NO FORMS -->
+    {% if confirm_edit_staff %}
+
+        <form class="centered top" action="/edit_staff" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button name="confirm_edit" class="btn btn-danger" type="submit" value="no">No</button>
+            <button name="confirm_edit" class="btn btn-success" type="submit" value="yes" >Yes</button>
+        </form>
+
+    {% elif confirm_add_dept %}
+
+        <form class="centered top" action="/add_dept" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button name="confirm_add_dept" class="btn btn-danger" type="submit" value="no">No</button>
+            <button name="confirm_add_dept" class="btn btn-success" type="submit" value="yes" >Yes</button>
+        </form>
+
+    {% elif confirm_remove_dept %}
+
+        <form class="centered top" action="/remove_dept" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button name="confirm_remove_dept" class="btn btn-danger" type="submit" value="no">No</button>
+            <button name="confirm_remove_dept" class="btn btn-success" type="submit" value="yes" >Yes</button>
+        </form>
+
+
+    {% endif %}
 
 {% endblock %}

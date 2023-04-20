@@ -1,0 +1,97 @@
+{% extends 'layout.html' %}
+
+{% block title %} - Add/Remove Department{% endblock %}
+
+{% block main %}
+
+    <!-- Alerts -->
+
+    {% if dept_added %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Department successfully added!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    {% elif dept_removed %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Department successfully removed!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
+    <!-- Title Head-->
+    <div class="container centered title-head"><h2>Add or Remove Departments</h2></div>
+
+    {% if not add_dept and not remove_dept %}
+
+        <!-- Screen 1 : Choose Add or Remove Department -->
+        <div class="container centered top">
+
+            <!-- BUTTONS: Choose to Add or Remove Department -->
+            <div class="container centered marg-all-bottom">
+                <form action="/add_remove_department" method="post">
+                    <button type="submit" class="dept_btn right" id="add_dept_btn" name="add_dept" value="True">Add Department</button>
+                    <button type="submit" class="dept_btn" id="remove_dept_btn" name="remove_dept" value="True">Remove Department</button>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                </form>
+            </div>
+
+        </div>
+
+    {% endif %}
+
+    <!-- Screen 2 -->
+    {% if add_dept %}
+
+        <!-- ADD -->
+        <h4 class="centered marg-all">Add Department</h4>
+
+        <div class="container container-flex marg-all centered">
+            <div>
+                <label>Enter New Department</label>
+                <form action="/add_dept" method="post">
+                    <input type="text" name="new_dept" autofocus autocomplete="off"><br>
+                    <button type="submit" class="dept_btn right top" id="add_dept_btn" name="add_dept" value="True">Add Department</button>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                </form>
+            </div>
+
+            <hr>
+            <div class="centered top">
+                <table class="table table-primary table-striped">
+                    <thead>
+                        <tr>
+                            <th>Current List of Departments</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {% for department in departments %}
+                            <tr>
+                                <td>{{ department }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    {% elif remove_dept %}
+
+        <h4 class="centered marg-all">Remove Department</h4>
+        <div class="centered"><small>(When you remove a department, the department field for all staff members currently listed under that department will be set to None)</small></div>
+        <div class="container container-flex marg-all centered">
+            <form action="/remove_dept" method="post">
+                <select name="dept_to_remove">
+                    <option disabled selected>Choose Department to Remove</option>
+                    {% for department in departments %}
+                        <option value="{{ department }}">{{ department }}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <button type="submit" class="dept_btn top" id="remove_dept_btn" name="remove_dept" value="True">Remove Department</button>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            </form>
+        </div>
+    {% endif %}
+
+{% endblock %}

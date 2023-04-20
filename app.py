@@ -73,6 +73,8 @@ access['show_page3'] = False
 registration_success = False
 password_reset_successful = False
 results = None
+dept_added = False
+dept_removed = False
 
 # Retrieve up to date staff column names
 db = sqlite3.connect("sql/staff.db")
@@ -256,6 +258,10 @@ def logout():
 
     email_sent = staff_added = departments_all = registration_success = False
     results = None
+    dept_added = dept_removed = False
+
+    # Remove CSVs from CSV directory
+    os.system('rm -f csv/*')
 
     return redirect("/")
 
@@ -367,7 +373,8 @@ def add_new_staff():
 
         # Checking former_staff max emp_id ensures if the most recent employee added was recently let go (inwhich case the max emp_id will be a former employee), each employee, former and current each have a unique ID
         for tmp_tuple in tmp_cursor2:
-            if tmp_tuple[0] >= new_id:
+            # Can't compare NoneType to int
+            if tmp_tuple[0] != None and tmp_tuple[0] >= new_id:
                 new_id = tmp_tuple[0] + 1
 
         # cur = db.cursor()
@@ -477,6 +484,9 @@ def csv_export():
     # Retrieve info from database
     staff = access_staff_sql(deformat_str(results.department, False))
 
+    if len(staff) == 0:
+        return redirect('/departments')
+
     # Sort
     if results.asc_desc == 'ascending':
         staff.sort(key=lambda x: x[deformat_str(results.sort_by, True)])
@@ -546,7 +556,7 @@ def csv_export():
 
         return redirect("/departments")
 
-    return render_template("download_csv.html", filename=file_path.replace('csv/', ''), username=session['username'])
+    return render_template("download_csv.html", filename=filename, username=session['username'])
 
 
 
@@ -743,9 +753,14 @@ def edit_staff():
         # EDIT STAFF MEMBER
         if request.form.get('confirm_edit') == 'yes':
 
-            # Edit info - set up query (column names don't work with ? placeholder)
+            # Type check DATE SQL data type. (It is string, so sqlite3.IntegrityError will not catch it as long as its a string)
+            if 'date' in edit_info['column_to_edit'] and edit_info['new_value'].count('-') != 2:
+                return render_template('edit_staff.html', columns=columns, datatype_mismatch=True, first_page=True, username=session['username'])
+
+            # Set up query (column names don't work with ? placeholder)
             query = f"UPDATE staff SET {edit_info['column_to_edit']} = ? WHERE emp_id = ?"
 
+            # Try to UPDATE table - type checking new value
             db = sqlite3.connect("sql/staff.db")
             try:
                 db.execute(query, (deformat_str(edit_info['new_value'], False), edit_info['emp_id']))
@@ -771,7 +786,7 @@ def edit_staff():
             edit_info['emp_id'] = request.form.get('emp_id')
 
             message2 = f"Employee ID: {edit_info['emp_id']}'s {format_str(edit_info['column_to_edit'])} to '{edit_info['new_value']}'?"
-            return render_template('confirmation.html', message=f"Are you sure you want to edit:", message2=message2)
+            return render_template('confirmation.html', message=f"Are you sure you want to edit:", message2=message2, confirm_edit_staff=True, username=session['username'])
 
         # -- Page 2 --
         elif request.form.get('person_to_edit_emp_id'):
@@ -866,6 +881,94 @@ def former_staff():
     return render_template('former_staff.html', former_staff=former_staff, columns=format_list(former_staff_columns), username=session['username'])
 
 
+@app.route('/add_remove_department', methods=['GET', 'POST'])
+@login_required
+def add_remove_departmemt():
+    global dept_added
+    global dept_removed
+
+    # GET
+    if request.method == 'GET':
+        if dept_added:
+            dept_added = False
+            return render_template('add_remove_department.html', dept_added=True, username=session['username'])
+        elif dept_removed:
+            dept_removed = False
+            return render_template('add_remove_department.html', dept_removed=True, username=session['username'])
+
+        return render_template('add_remove_department.html', username=session['username'])
+
+    # POST
+    else:
+        # Add department view
+        if request.form.get('add_dept'):
+            return render_template('add_remove_department.html', departments=format_list(get_departments()), username=session['username'], add_dept=True)
+
+        # Remove department view
+        else:
+            return render_template('add_remove_department.html', departments=format_list(get_departments()), username=session['username'], remove_dept=True)
+
+
+@app.route('/add_dept', methods=['POST'])
+@login_required
+def add_dept():
+    global new_dept
+    global dept_added
+
+    if not request.form.get('confirm_add_dept'):
+
+        new_dept = request.form.get('new_dept')
+        departments = get_departments()
+
+        if new_dept.lower() in departments:
+            return render_template('error.html', message='The department below already exists', message2=f"'{format_str(new_dept)}'", username=session['username'])
+        elif len(new_dept) == 0:
+            return render_template('error.html', message='You did not enter a department name', username=session['username'])
+        else:
+            return render_template('confirmation.html', message='Are you sure you want to add the department:', message2=f"'{format_str(new_dept)}'", confirm_add_dept=True, username=session['username'])
+
+    # Coming from confirmation
+    else:
+
+        if request.form.get('confirm_add_dept') == 'yes':
+            db = sqlite3.connect('sql/staff.db')
+            db.execute('INSERT INTO departments VALUES (?)', (new_dept.lower(),))
+            db.commit()
+            dept_added = True
+
+        # Redirect whether yes or no
+        return redirect('/add_remove_department')
+
+
+@app.route('/remove_dept', methods=['POST'])
+@login_required
+def remove_dept():
+    global dept_to_remove
+    global dept_removed
+
+    if not request.form.get('confirm_remove_dept'):
+
+        dept_to_remove = request.form.get('dept_to_remove')
+        print('\n\n\n', dept_to_remove)
+        return render_template('confirmation.html', message='CAUTION: Are you sure you want to REMOVE the following department?', message2=f"'{dept_to_remove}'", confirm_remove_dept=True, username=session['username'])
+
+    # Coming from confirmation
+    else:
+
+        if request.form.get('confirm_remove_dept') == 'yes':
+
+            # SQL
+            db = sqlite3.connect('sql/staff.db')
+            db.execute('DELETE FROM departments WHERE department = (?)', (dept_to_remove.lower(),))
+            db.execute('UPDATE staff SET department = NULL WHERE department = (?)', (dept_to_remove.lower(),))
+            db.commit()
+            dept_removed = True
+
+        # Redirect whether yes or no
+        return redirect('/add_remove_department')
+
+
+
 
 #   --- SQL FUNCTIONS ---
 
@@ -925,7 +1028,7 @@ def get_departments():
     for tmp_tuple in tmp_cursor:
         departments.append(tmp_tuple[0])
 
-    departments.sort
+    departments.sort()
 
     # Return list of department names
     return departments

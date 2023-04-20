@@ -71,6 +71,7 @@
 -- INSERT INTO departments VALUES('sales');
 
 
+
 -- SELECT salary.emp_id, salary, first_name, last_name, department, title, start_date FROM salary JOIN staff on salary.emp_id = staff.emp_id;
 
 -- DROP TABLE staff;

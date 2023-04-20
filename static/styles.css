@@ -1,3 +1,28 @@
+.title-head {
+    margin: 40px;
+    /* width: 200px; */
+    padding: 20px;
+    /* background-color: #c8e9ea; */
+    border-radius: 20px;
+    box-shadow: 4px 4px 20px #8f8f8f;
+    font-family: arial;
+    color: #232323;
+    letter-spacing: .15em;
+    text-shadow:
+    2px 2px 2px #a6a6a6;
+    /* -1px 2px 1px #a3a2a2,
+    -2px 4px 1px #b6b4b4,
+    -3px 6px 1px #b8b7b7; */
+}
+
+.marg-all {
+    margin: 72px;
+}
+
+.marg-all-bottom {
+    margin: 72px 72px 120px 72px;
+}
+
 .top {
     margin-top: 20px;
 }
@@ -29,10 +54,10 @@
     background-image: url("static/images/search.svg");
 } */
 
-input {
+/* input {
     /* text-indent: 20px; */
     background-image: url();
-}
+} */
 
 .red {
     color: #db0000;
@@ -48,4 +73,51 @@ input {
 
 .smallest {
     font-size: 0.8em
+}
+
+/* Add/Remove Department Buttons */
+.dept_btn {
+    width: 200px;
+    color: #303030;
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 10px 10px 10px #8f8f8f;
+}
+
+/* Add Dept */
+#add_dept_btn {
+    border: 5px outset #80d080;
+    background-color: #00ef00;
+}
+
+#add_dept_btn:hover {
+    border: 5px outset #00e000;
+    background-color: #00d000;
+    box-shadow: 10px 10px 10px #707070;
+}
+
+#add_dept_btn:active {
+    color: #e4e4e4;
+    border: 5px inset #00e000;
+    box-shadow: 5px 5px 10px #8f8f8f;
+}
+
+
+/* Remove Dept */
+#remove_dept_btn {
+    border: 5px outset #af3333;
+    background-color: #e00000;
+    color: #e4e4e4;
+}
+
+#remove_dept_btn:hover {
+    border: 5px outset #900000;
+    background-color: #d00000;
+    box-shadow: 10px 10px 10px #707070;
+}
+
+#remove_dept_btn:active {
+    border: 5px inset #900000;
+    box-shadow: 5px 5px 10px #8f8f8f;
+    color: #343434;
 }
