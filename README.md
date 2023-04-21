@@ -30,6 +30,7 @@
 </ul>
 ![image_main page](https://user-images.githubusercontent.com/91298183/228104671-ddae764b-a7e5-4c6b-a210-1e0ab144f7db.png)
 
+<h1></h1>
 <h5>REGISTER:</h5>
 <h6>/register</h6>
 <ul>
@@ -39,6 +40,7 @@
 ![image_register](https://user-images.githubusercontent.com/91298183/228103045-c99231a8-5765-4fe7-becc-3322928c74b1.png)
 <br>
 
+<h1></h1>
 <h5>LOGIN:</h5>
 <h6>/login</h6>
 <ul>
@@ -50,6 +52,7 @@
 ![image_login](https://user-images.githubusercontent.com/91298183/228103086-ff47c144-cebe-4c8f-91df-e18ee3a8c63e.png)
 <br>
 
+<h1></h1>
 <h5>DEPARTMENTS:</h5>
 <h6>/departments</h6>
 <ul>
@@ -64,6 +67,7 @@
 ![image_departments](https://user-images.githubusercontent.com/91298183/228103108-a905fe32-c4d3-4349-bc75-3d15e9f6d4ae.png)
 <br>
 
+<h1></h1>
 <h5>ALL DEPARTMENTS</h5>
 <h6>/all_departments</h6>
   <ul>
@@ -73,6 +77,7 @@
   </ul>
   <br>
  
+<h1></h1>
 <h5>Add NEW STAFF:</h5>
 <h6>/add_new_staff</h6>
   <ul>
@@ -84,6 +89,7 @@
   ![image_add_new_staff](https://user-images.githubusercontent.com/91298183/228103805-621db232-495e-4635-8f51-cc418a12d766.png)
   <br>
 
+<h1></h1>
 <h5>REMOVE STAFF:</h5>
 <h6>/remove_staff</h6>
   <ul>
@@ -95,7 +101,7 @@
   ![image_remove_staff_page1](https://user-images.githubusercontent.com/91298183/228103127-909b890a-2fa7-4e52-94b2-b02dd67fa099.png)
   <br>
    
-
+<h1></h1>
 <h5>STAFF_LOOKUP:</h5>
 <h6>/staff_lookup</h6>
   <ul>
@@ -109,7 +115,8 @@
   </ul>
   ![staff_look_up](https://user-images.githubusercontent.com/91298183/228105064-137a4dd4-41d9-4e14-8264-521dd0bd9b56.png)
   <br>
-   
+
+<h1></h1>
 <h5>EDIT STAFF:</h5>
 <h6>/edit_staff</h6>
   
@@ -126,7 +133,7 @@
   ![edit_staff_page3](https://user-images.githubusercontent.com/91298183/228335756-3f01ef2b-4fda-4914-91b3-9bfc92262d04.png)
     <br>
 
-   
+<h1></h1>  
 <h5>SALARY:</h5>
 <h6>/salary</h6>
   <ul>
@@ -138,7 +145,7 @@
 <br>
 
 
-      
+<h1></h1>     
 <h5>FORMER STAFF:</h5>
 <h6>/former_staff</h6>
   <ul>
