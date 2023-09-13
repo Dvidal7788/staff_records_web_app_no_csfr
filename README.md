@@ -38,6 +38,7 @@
    <li>Simply create a username and password to register</li>
    <li>Select a security question. This will be used if you ever forget your password or need to reset your password.</li>
 </ul>
+
 ![image_register](https://user-images.githubusercontent.com/91298183/228103045-c99231a8-5765-4fe7-becc-3322928c74b1.png)
 <br>
 
@@ -50,6 +51,7 @@
    <li>If you forget your password, you can always reset it using you security question. Click 'Forgot Password/Reset Password' from the login page to do this.</li>
    </h6>
 </ul>
+
 ![image_login](https://user-images.githubusercontent.com/91298183/228103086-ff47c144-cebe-4c8f-91df-e18ee3a8c63e.png)
 <br>
 
@@ -65,6 +67,7 @@
   <li>You may also click the Download CSV button to be redirected to download the CSV directly.</li>
   </h6>
 </ul>
+
 ![image_departments](https://user-images.githubusercontent.com/91298183/228103108-a905fe32-c4d3-4349-bc75-3d15e9f6d4ae.png)
 <br>
 
@@ -87,6 +90,7 @@
     <li>The staff member will be added to the appropriate SQL databases and you will see their information populate in the any of the apporpriate routes.</li>
     </h6>
   </ul>
+  
   ![image_add_new_staff](https://user-images.githubusercontent.com/91298183/228103805-621db232-495e-4635-8f51-cc418a12d766.png)
   <br>
 
@@ -99,6 +103,7 @@
    <li>Once a staff member is removed, their information is added to a former_staff database, which you can access from the /former_staff route</li>
    </h6>  
   </ul>
+  
   ![image_remove_staff_page1](https://user-images.githubusercontent.com/91298183/228103127-909b890a-2fa7-4e52-94b2-b02dd67fa099.png)
   <br>
    
@@ -114,6 +119,7 @@
       </ul>
     </h6>
   </ul>
+  
   ![staff_look_up](https://user-images.githubusercontent.com/91298183/228105064-137a4dd4-41d9-4e14-8264-521dd0bd9b56.png)
   <br>
 
@@ -129,8 +135,10 @@
     <li>Last, select the item you wish to edit and type in the new value you wish to assign to that item. (As shown in the 2nd example image below.)</li>
     <h6>  
   </ul>
+      
   ![image_edit_staff_page2](https://user-images.githubusercontent.com/91298183/228103182-fcf2639b-16ae-4146-ab5a-822a047359f5.png)
     <br>
+    
   ![edit_staff_page3](https://user-images.githubusercontent.com/91298183/228335756-3f01ef2b-4fda-4914-91b3-9bfc92262d04.png)
     <br>
 
@@ -142,6 +150,7 @@
     <li>This route simply displays a table of all staff members and their corresponding salaries.</li>
     <h6>
   </ul>
+      
 ![salaries](https://user-images.githubusercontent.com/91298183/228335749-9c51c910-0d7c-4da1-9045-fa1ee4598e03.png)
 <br>
 
@@ -154,5 +163,6 @@
     <li>This route simply displays a table of all former staff members.</li>
     <h6>
   </ul>
+      
   ![former_staff](https://user-images.githubusercontent.com/91298183/228335742-18f21282-00d5-4a7d-8375-5eeea12af5bc.png)
 
