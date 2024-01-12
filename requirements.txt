@@ -1,6 +1,7 @@
 flask
 Flask-Mail
-flask_wtf.csrf
+Flask==1.1.4
+Flask-WTF==0.15.1
 functools
 werkzeug.security
 sqlite3
