@@ -108,6 +108,7 @@ def no_store_cache_control_decorator(func):
 
 # Routes
 @app.route("/")
+@no_store_cache_control_decorator
 def index():
 
     if not 'username' in session:
@@ -116,8 +117,9 @@ def index():
         username = session['username']
         return render_template('index.html', username=username)
 
-@no_store_cache_control_decorator
+
 @app.route("/register", methods=['GET', 'POST'])
+@no_store_cache_control_decorator
 def register():
 
     # GET
@@ -208,8 +210,9 @@ def register():
 
         return redirect("/login")
 
-@no_store_cache_control_decorator
+
 @app.route("/login", methods=['GET', 'POST'])
+@no_store_cache_control_decorator
 def login():
 
     # GET
@@ -254,7 +257,9 @@ def login():
 
         return redirect("/")
 
+
 @app.route("/logout")
+@no_store_cache_control_decorator
 def logout():
     global email_sent, staff_added, departments_all, registration_success, results
 
