@@ -98,17 +98,9 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# CSRF token bug fix
-def no_store_cache_control_decorator(func):
-    def wrapper(*args, **kwargs):
-        response = func(*args, **kwargs)
-        response.headers["Cache-Control"] = "no-store"
-        return response
-    return wrapper
 
 # Routes
 @app.route("/")
-@no_store_cache_control_decorator
 def index():
 
     if not 'username' in session:
@@ -119,7 +111,6 @@ def index():
 
 
 @app.route("/register", methods=['GET', 'POST'])
-@no_store_cache_control_decorator
 def register():
 
     # GET
@@ -212,7 +203,6 @@ def register():
 
 
 @app.route("/login", methods=['GET', 'POST'])
-@no_store_cache_control_decorator
 def login():
 
     # GET
@@ -259,7 +249,6 @@ def login():
 
 
 @app.route("/logout")
-@no_store_cache_control_decorator
 def logout():
     global email_sent, staff_added, departments_all, registration_success, results
 
