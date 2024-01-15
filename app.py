@@ -98,7 +98,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-// CSRF token bug fix
+# CSRF token bug fix
 def no_store_cache_control_decorator(func):
     def wrapper(*args, **kwargs):
         response = func(*args, **kwargs)
