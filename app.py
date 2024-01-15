@@ -98,6 +98,14 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+// CSRF token bug fix
+def no_store_cache_control_decorator(func):
+    def wrapper(*args, **kwargs):
+        response = func(*args, **kwargs)
+        response.headers["Cache-Control"] = "no-store"
+        return response
+    return wrapper
+
 # Routes
 @app.route("/")
 def index():
@@ -108,7 +116,7 @@ def index():
         username = session['username']
         return render_template('index.html', username=username)
 
-
+@no_store_cache_control_decorator
 @app.route("/register", methods=['GET', 'POST'])
 def register():
 
@@ -200,7 +208,7 @@ def register():
 
         return redirect("/login")
 
-
+@no_store_cache_control_decorator
 @app.route("/login", methods=['GET', 'POST'])
 def login():
 
