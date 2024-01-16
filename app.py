@@ -16,12 +16,10 @@ csrf = CSRFProtect(app)
 csrf.init_app(app)
 
 # Generate a random SECRET_KEY
-if 'SECRET_KEY' not in app.config:
-    app.config['SECRET_KEY'] = os.urandom(24).hex()
+app.config['SECRET_KEY'] = os.urandom(24).hex()
 
 # Generate a random WTF_CSRF_SECRET_KEY
-if 'WTF_CSRF_SECRET_KEY' not in app.config:
-    app.config['WTF_CSRF_SECRET_KEY'] = os.urandom(24).hex()
+app.config['WTF_CSRF_SECRET_KEY'] = os.urandom(24).hex()
 
 # Configure session
 app.config['SESSION_PERMANENT'] = False
