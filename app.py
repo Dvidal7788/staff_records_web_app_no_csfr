@@ -16,7 +16,7 @@ csrf = CSRFProtect(app)
 csrf.init_app(app)
 
 # Generate a random SECRET_KEY
-if 'SECRET_KEY' not int app.config:
+if 'SECRET_KEY' not in app.config:
     app.config['SECRET_KEY'] = os.urandom(24).hex()
 
 # Generate a random WTF_CSRF_SECRET_KEY
