@@ -16,10 +16,12 @@ csrf = CSRFProtect(app)
 csrf.init_app(app)
 
 # Generate a random SECRET_KEY
-app.config['SECRET_KEY'] = os.urandom(24).hex()
+if 'SECRET_KEY' not in app.config:
+    app.config['SECRET_KEY'] = os.urandom(24).hex()
 
 # Generate a random WTF_CSRF_SECRET_KEY
-app.config['WTF_CSRF_SECRET_KEY'] = os.urandom(24).hex()
+if 'WTF_CSRF_SECRET_KEY' not in app.config:
+    app.config['WTF_CSRF_SECRET_KEY'] = os.urandom(24).hex()
 
 # Configure session
 app.config['SESSION_PERMANENT'] = False
@@ -108,9 +110,9 @@ def login_required(f):
 # Routes
 @app.route("/")
 def index():
-
+    print(session)
     if not 'username' in session:
-        return render_template('index.html')
+        return render_template('index.html', session=session)
     else:
         username = session['username']
         return render_template('index.html', username=username)
@@ -483,7 +485,7 @@ def departments():
 @app.route("/csv_export", methods=['POST'])
 @login_required
 def csv_export():
-
+    print('\n\n\nHERE\n\n\n')
     # Remove any previous CSVs
     os.system('rm -f csv/*')
 
