@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %} - Visualization{% endblock %}
+
+{% block main %}
+
+    <!-- TOGGLE Value/Percentage BUTTON -->
+    <div class="centered">
+        <form action="/pie_chart_toggle_percentage" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary top">Toggle Dollars/Percentages</button>
+        </form>
+    </div>
+
+    <!-- PIE CHART -->
+    <div class="centered top">
+        <img id="pie_chart" alt="pie chart (sum salaries per department)" src="static/graphs/plot.png">
+    </div>
+
+
+
+{% endblock %}

@@ -8,6 +8,10 @@ import sqlite3
 from datetime import datetime
 import os
 import re
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 app = Flask(__name__)
 
@@ -45,6 +49,7 @@ class Results():
         self.sort_by = sort_by
         self.num_of_results = num_of_results
         self.asc_desc = asc_desc
+        return
 
 class RemoveStaff():
     # Struct:
@@ -69,6 +74,15 @@ class RemoveStaff():
         return
 
 
+class PieChart():
+
+    def __init__(self):
+        self.sum_mean = 'sum'
+        self.percentage = True
+        self.redirect = False
+        return
+
+
 # Globals
 departments_all = False
 staff_added = False
@@ -83,6 +97,10 @@ password_reset_successful = False
 results = None
 dept_added = False
 dept_removed = False
+pie_chart = PieChart()
+
+
+
 
 # Retrieve up to date staff column names
 db = sqlite3.connect("sql/staff.db")
@@ -110,7 +128,7 @@ def login_required(f):
 # Routes
 @app.route("/")
 def index():
-    print(session)
+
     if not 'username' in session:
         return render_template('index.html', session=session)
     else:
@@ -485,7 +503,7 @@ def departments():
 @app.route("/csv_export", methods=['POST'])
 @login_required
 def csv_export():
-    print('\n\n\nHERE\n\n\n')
+
     # Remove any previous CSVs
     os.system('rm -f csv/*')
 
@@ -959,7 +977,7 @@ def remove_dept():
     if not request.form.get('confirm_remove_dept'):
 
         dept_to_remove = request.form.get('dept_to_remove')
-        print('\n\n\n', dept_to_remove)
+
         return render_template('confirmation.html', message='CAUTION: Are you sure you want to REMOVE the following department?', message2=f"'{dept_to_remove}'", confirm_remove_dept=True, username=session['username'])
 
     # Coming from confirmation
@@ -976,6 +994,127 @@ def remove_dept():
 
         # Redirect whether yes or no
         return redirect('/add_remove_department')
+
+
+
+
+@app.route('/visualization', methods=['GET', 'POST'])
+@login_required
+def visualization():
+
+    global pie_chart
+
+    #       -- GET --
+    if request.method == 'GET' and not pie_chart.redirect:
+        return render_template('visualization_landing.html')
+
+    pie_chart.redirect = False
+    #       -- POST --
+
+    # File path of chart
+    file_path = 'static/graphs/plot.png'
+
+    # Legend file path
+    dot_index = file_path.find('.')
+    legend_file_path = f'{file_path[:dot_index]}_legend.png'
+
+    # Retrieve data from database
+    db = sqlite3.connect('sql/staff.db')
+    tmp_cursor = db.execute('SELECT * FROM staff')
+
+    data = []
+
+    # Each row
+    for tmp_tuple in tmp_cursor:
+
+        # Each value in row
+        row = {}
+        for column, value in zip(staff_columns, tmp_tuple):
+            row[column] = value
+
+        data.append(row)
+
+    staff_df = pd.DataFrame(data)
+
+    tmp_cursor = db.execute('SELECT * FROM salary')
+
+    data = []
+    salary_columns = ['emp_id', 'salary']
+
+    # Each row
+    for tmp_tuple in tmp_cursor:
+
+        # Each value in row
+        row = {}
+        for column, value in zip(salary_columns, tmp_tuple):
+            row[column] = value
+
+        data.append(row)
+
+    salary_df = pd.DataFrame(data)
+
+    # JOIN
+    joined_df = pd.merge(staff_df, salary_df, on='emp_id', how='inner')
+
+
+    # Group by department
+    if request.form.get('sum_mean') is not None:
+        pie_chart.decision = True
+        pie_chart.sum_mean = request.form.get('sum_mean')
+
+    if pie_chart.sum_mean == 'sum':
+        grouped = joined_df[['salary', 'department']].groupby(['department'], as_index=False).sum()
+    else:
+        grouped = joined_df[['salary', 'department']].groupby(['department'], as_index=False).mean()
+
+    # Create a pie chart
+    plt.figure(figsize=(8,6))
+
+    if pie_chart.percentage:
+        plt.pie(grouped['salary'], labels=format_list(list(grouped['department'])), autopct='%1.1f%%', startangle=90)
+    else:
+        plt.pie(grouped['salary'], labels=format_list(list(grouped['department'])), autopct=lambda p: '${:,.0f}'.format(p * sum(grouped['salary']) / 100, p), pctdistance=.8, startangle=90)
+        # plt.pie(grouped['salary'], labels=format_list(list(grouped['department'])), autopct=lambda p: '${:,.0f}\n({:.1f}%)'.format(p * sum(grouped['salary']) / 100, p), pctdistance=.8, startangle=90)
+
+    # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.axis('equal')
+
+    plt.title('Total Salary per Department', y=1.065) if pie_chart.sum_mean == 'sum' else plt.title('Average Salary per Department', y=1.065)
+
+
+    # salary_with_dollarsign = [usd(sal, True) for sal in grouped['salary']]
+
+    # Save legend separately
+    # legend = plt.legend(salary_with_dollarsign, loc='upper right')
+
+    # fig  = legend.figure
+    # fig.canvas.draw()
+    # bbox  = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+    # fig.savefig(filename, dpi="figure", bbox_inches=bbox)
+
+    # Delete previous chart/legend
+    os.system(f'rm -f {file_path}')
+    # os.system(f'rm -f {legend_file_path}')
+
+    # Save the chart
+    plt.savefig(file_path)
+    # legend.savefig(legend_file_path)
+
+    return render_template('visualization.html')
+
+
+
+@app.route('/pie_chart_toggle_percentage', methods=['POST'])
+@login_required
+def pie_chart_toggle_percentage():
+
+    global pie_chart
+    pie_chart.decision = True
+
+    pie_chart.percentage = not pie_chart.percentage
+    pie_chart.redirect = True
+
+    return redirect('/visualization')
 
 
 

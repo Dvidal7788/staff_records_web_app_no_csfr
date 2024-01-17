@@ -1,6 +1,6 @@
 -- STAFF ----
 
--- .schema
+.schema
 
 -- CSV
 -- .mode csv
@@ -183,3 +183,4 @@
 
 
 -- INSERT INTO manager
+
