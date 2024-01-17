@@ -9,5 +9,9 @@ setup(
         'Flask-Mail==0.9.1',
         'Flask-WTF==0.15.1',
         'Werkzeug==2.0.3',
+        'pandas',
+        'numpy',
+        'matplotlib',
+        'seaborn'
     ],
 )
