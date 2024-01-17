@@ -7,3 +7,5 @@ pandas==1.3.3
 numpy==1.21.2
 matplotlib==3.4.3
 seaborn==0.11.2
+setuptools>=69.0.3
+pip>=23.3.2
