@@ -3,12 +3,13 @@
 <h6>Designed & Written by David Manuel Vidal</h6>
 <h6>(All names in the database are for demo purposes only. They do not represent real people.)</h6>
 <h3>Purpose:</h3>
-<h4>This web app allows the user to query/update staff records SQL database</h4>
+<h4>This web app allows the user to easily query/update a staff records SQL database</h4>
 
 
 <img href="https://drive.google.com/file/d/1GokryXBk8ZkFv7K1t7bvS4c9Xp6V84p8/view" />
 <h3>TRY APP HERE:</h3>
 https://staff-records-dad22d733842.herokuapp.com/
+<hr>
   
 <h1>Routes:</h1>
 
