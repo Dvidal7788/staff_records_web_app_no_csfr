@@ -117,8 +117,6 @@ security_questions = ["What is your mother's maiden name?", "In which city were 
 # print('\n\nDEBUG SESSION BEGIN\n\n', session)
 # print('\n\nDEBUG SESSION BEGIN\n\n')
 
-print('\nSESSION BEFORE ROUTES:\n', session)
-
 def login_required(f):
     # Decorate routes to require login.
     # https://flask.palletsprojects.com/en/1.1.x/patterns/viewdecorators/
