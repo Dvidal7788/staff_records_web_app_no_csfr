@@ -113,8 +113,8 @@ reasons_for_leaving = ['terminated', 'quit', 'retired', 'layed off', 'other']
 security_questions = ["What is your mother's maiden name?", "In which city were you born?", "What is the name of your first crush?", "What is the name of your first pet?", "What is the name of your childhood best friend?", "What was the make and model of your first car?"]
 
 
-# print('\n\nDEBUG SESSION BEGIN\n\n', session)
-print('\n\nDEBUG SESSION BEGIN\n\n')
+print('\n\nDEBUG SESSION BEGIN\n\n', session)
+# print('\n\nDEBUG SESSION BEGIN\n\n')
 
 def login_required(f):
     # Decorate routes to require login.
