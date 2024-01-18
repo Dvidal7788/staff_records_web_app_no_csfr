@@ -134,8 +134,8 @@ def login_required(f):
 @app.route("/")
 def index():
 
-    print('\n\nDEBUG Index Session:\n\n', session)
-    print('\n\nDEBUG Index Request:\n\n', request.form)
+    print('\n\nDEBUG Index Session:\n', session)
+    print('\n\nDEBUG Index Request:\n', request.form)
     print('\n\nDEBUG Index app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
 
     if not 'username' in session:
@@ -148,8 +148,9 @@ def index():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     
-    print('\n\nDEBUG Register BEGIN\n\n', session)
-    print('\n\nDEBUG Register BEGIN\n\n', request.form)
+    print('\n\nDEBUG Register BEGIN\n', session)
+    print('\n\nDEBUG Register BEGIN\n', request.form)
+    print('\n\nDEBUG Register app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
 
 
     # GET
@@ -244,8 +245,9 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
 
-    print('\n\nDEBUG Login BEGIN\n\n', session)
-    print('\n\nDEBUG Login BEGIN\n\n', request.form)
+    print('\n\nDEBUG Login BEGIN\n', session)
+    print('\n\nDEBUG Login BEGIN\n', request.form)
+    print('\n\nDEBUG Login app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
 
 
     # GET
