@@ -133,15 +133,8 @@ def login_required(f):
 @app.route("/")
 def index():
 
-    if 'csrf_token' in session:
-        print('\n\nDEBUG Index BEGIN\n\n', session, session['csrf_token'])
-    else:
-        print('\n\nDEBUG Index BEGIN\n\n', session)
-
-    if 'csrf_token' in request.form:
-        print('\n\nDEBUG Index BEGIN\n\n', request.form, request.form['csrf_token'])
-    else:
-        print('\n\nDEBUG Index BEGIN\n\n', request)
+    print('\n\nDEBUG Index BEGIN\n\n', session)
+    print('\n\nDEBUG Index BEGIN\n\n', request.form)
 
     if not 'username' in session:
         return render_template('index.html', session=session)
@@ -153,16 +146,8 @@ def index():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
 
-    if 'csrf_token' in session:
-        print('\n\nDEBUG Register BEGIN\n\n', session, session['csrf_token'])
-    else:
-        print('\n\nDEBUG Register BEGIN\n\n', session)
-
-
-    if 'csrf_token' in request.form:
-        print('\n\nDEBUG Register BEGIN\n\n', request.form, request.form['csrf_token'])
-    else:
-        print('\n\nDEBUG Register BEGIN\n\n', request)
+    print('\n\nDEBUG Register BEGIN\n\n', session)
+    print('\n\nDEBUG Register BEGIN\n\n', request.form)
 
 
     # GET
@@ -257,15 +242,8 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
 
-    if 'csrf_token' in session:
-        print('\n\nDEBUG Login BEGIN\n\n', session, session['csrf_token'])
-    else:
-        print('\n\nDEBUG Login BEGIN\n\n', session)
-
-    if 'csrf_token' in request.form:
-        print('\n\nDEBUG Login BEGIN\n\n', request.form, request.form['csrf_token'])
-    else:
-        print('\n\nDEBUG Login BEGIN\n\n', request)
+    print('\n\nDEBUG Login BEGIN\n\n', session)
+    print('\n\nDEBUG Login BEGIN\n\n', request.form)
 
 
     # GET
@@ -1039,15 +1017,8 @@ def remove_dept():
 @login_required
 def visualization():
 
-    if 'csrf_token' in session:
-        print('\n\nDEBUG PIE CHART BEGIN\n\n', session, session['csrf_token'])
-    else:
-        print('\n\nDEBUG PIE CHART BEGIN\n\n', session)
-
-    if 'csrf_token' in request.form:
-        print('\n\nDEBUG Pie Chart BEGIN\n\n', request.form, request.form['csrf_token'])
-    else:
-        print('\n\nDEBUG Pie Chart BEGIN\n\n', request)
+    print('\n\nDEBUG PIE CHART BEGIN\n\n', session)
+    print('\n\nDEBUG Pie Chart BEGIN\n\n', request.form)
 
 
     global pie_chart
