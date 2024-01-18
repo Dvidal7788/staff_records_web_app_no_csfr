@@ -134,12 +134,11 @@ def login_required(f):
 @app.route("/")
 def index():
 
-    print('\n\nDEBUG Index BEGIN\n\n', session)
-    print('\n\nDEBUG Index BEGIN\n\n', request.form)
+    print('\n\nDEBUG Index Session:\n\n', session)
+    print('\n\nDEBUG Index Request:\n\n', request.form)
+    print('\n\nDEBUG Index app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
 
     if not 'username' in session:
-        if 'csrf_token' not in session:
-            session['csrf_token'] = app.config['WTF_CSRF_SECRET_KEY']
         return render_template('index.html', session=session)
     else:
         username = session['username']
