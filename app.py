@@ -139,8 +139,8 @@ def index():
     print('\n\nDEBUG Index app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
 
     if not 'username' in session:
-        if not 'csrf_token' in session:
-            session['csrf_token'] = generate_password_hash(app.config['WTF_CSRF_SECRET_KEY'], method='pbkdf2:sha512')
+        # if not 'csrf_token' in session:
+            # session['csrf_token'] = generate_password_hash(app.config['WTF_CSRF_SECRET_KEY'], method='pbkdf2:sha512')
         return render_template('index.html')
     else:
         username = session['username']
