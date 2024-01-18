@@ -138,6 +138,11 @@ def index():
     else:
         print('\n\nDEBUG Index BEGIN\n\n', session)
 
+    if 'csrf_token' in request.form:
+        print('\n\nDEBUG Index BEGIN\n\n', request.form, request.form['csrf_token'])
+    else:
+        print('\n\nDEBUG Index BEGIN\n\n', request)
+
     if not 'username' in session:
         return render_template('index.html', session=session)
     else:
@@ -152,6 +157,13 @@ def register():
         print('\n\nDEBUG Register BEGIN\n\n', session, session['csrf_token'])
     else:
         print('\n\nDEBUG Register BEGIN\n\n', session)
+
+
+    if 'csrf_token' in request.form:
+        print('\n\nDEBUG Register BEGIN\n\n', request.form, request.form['csrf_token'])
+    else:
+        print('\n\nDEBUG Register BEGIN\n\n', request)
+
 
     # GET
     if request.method == 'GET':
@@ -249,6 +261,12 @@ def login():
         print('\n\nDEBUG Login BEGIN\n\n', session, session['csrf_token'])
     else:
         print('\n\nDEBUG Login BEGIN\n\n', session)
+
+    if 'csrf_token' in request.form:
+        print('\n\nDEBUG Login BEGIN\n\n', request.form, request.form['csrf_token'])
+    else:
+        print('\n\nDEBUG Login BEGIN\n\n', request)
+
 
     # GET
     if request.method == 'GET':
@@ -1025,6 +1043,12 @@ def visualization():
         print('\n\nDEBUG PIE CHART BEGIN\n\n', session, session['csrf_token'])
     else:
         print('\n\nDEBUG PIE CHART BEGIN\n\n', session)
+
+    if 'csrf_token' in request.form:
+        print('\n\nDEBUG Pie Chart BEGIN\n\n', request.form, request.form['csrf_token'])
+    else:
+        print('\n\nDEBUG Pie Chart BEGIN\n\n', request)
+
 
     global pie_chart
 
