@@ -17,7 +17,6 @@ app = Flask(__name__)
 
 # Configure CSRF
 csrf = CSRFProtect(app)
-csrf.init_app(app)
 
 # Generate a random SECRET_KEY
 if 'SECRET_KEY' not in app.config:
