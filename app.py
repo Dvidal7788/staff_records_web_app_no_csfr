@@ -42,8 +42,6 @@ app.config['MAIL_USE_TLS'] = True # Use encryption
 app.config['MAIL_USE_SSL'] = False
 mail = Mail(app)
 
-if 'csrf_token' not in session:
-    session['csrf_token'] = app.config['WTF_CSRF_SECRET_KEY']
 
 
 class Results():
@@ -140,6 +138,8 @@ def index():
     print('\n\nDEBUG Index BEGIN\n\n', request.form)
 
     if not 'username' in session:
+        if 'csrf_token' not in session:
+            session['csrf_token'] = app.config['WTF_CSRF_SECRET_KEY']
         return render_template('index.html', session=session)
     else:
         username = session['username']
