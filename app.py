@@ -139,6 +139,8 @@ def index():
     print('\n\nDEBUG Index app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
 
     if not 'username' in session:
+        if not 'csrf_token' in session:
+            session['csrf_token'] = generate_password_hash(app.config['WTF_CSRF_SECRET_KEY'], method='pbkdf2:sha512')
         return render_template('index.html')
     else:
         username = session['username']
@@ -152,7 +154,10 @@ def register():
     print('\n\nDEBUG Register BEGIN\n', request.form)
     print('\n\nDEBUG Register app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
 
-
+    # Don't register if already logged in
+    if 'user_id' in session:
+        return redirect('/')
+    
     # GET
     if request.method == 'GET':
         return render_template('register.html', security_questions=security_questions)
@@ -249,6 +254,9 @@ def login():
     print('\n\nDEBUG Login BEGIN\n', request.form)
     print('\n\nDEBUG Login app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
 
+    # Don't log in if already logged in
+    if 'user_id' in session:
+        return redirect('/')
 
     # GET
     if request.method == 'GET':
