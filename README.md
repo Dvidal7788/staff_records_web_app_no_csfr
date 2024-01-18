@@ -7,20 +7,8 @@
 
 
 <img href="https://drive.google.com/file/d/1GokryXBk8ZkFv7K1t7bvS4c9Xp6V84p8/view" />
-<h3>To Run:</h3>
-<ul>
-  <li>Download this repository</li>
-  <li>Navigate to the 'staff_recods_web_app/' directory</li>
-  <li>type flask run in terminal (if you do not already have flask, run pip install flask and pip install Flask-Mail)</li>
-  <li>copy/paste URL into browser</li>
-</ul>
-
-<h3>To Test App:</h3>
-<ul>
-  <li>Once the app is running in your browser, click the 'Register' link in the top right corner</li>
-  <li>Register, then log in</li>
-</ul>
-<br>
+<h3>TRY APP HERE:</h3>
+https://staff-records-dad22d733842.herokuapp.com/
   
 <h1>Routes:</h1>
 
