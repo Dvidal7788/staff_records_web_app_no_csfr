@@ -112,6 +112,10 @@ for tmp_tuple in tmp_cursor:
 reasons_for_leaving = ['terminated', 'quit', 'retired', 'layed off', 'other']
 security_questions = ["What is your mother's maiden name?", "In which city were you born?", "What is the name of your first crush?", "What is the name of your first pet?", "What is the name of your childhood best friend?", "What was the make and model of your first car?"]
 
+
+# print('\n\nDEBUG SESSION BEGIN\n\n', session)
+print('\n\nDEBUG SESSION BEGIN\n\n')
+
 def login_required(f):
     # Decorate routes to require login.
     # https://flask.palletsprojects.com/en/1.1.x/patterns/viewdecorators/
@@ -129,6 +133,11 @@ def login_required(f):
 @app.route("/")
 def index():
 
+    if 'csrf_token' in session:
+        print('\n\nDEBUG Index BEGIN\n\n', session, session['csrf_token'])
+    else:
+        print('\n\nDEBUG Index BEGIN\n\n', session)
+
     if not 'username' in session:
         return render_template('index.html', session=session)
     else:
@@ -138,6 +147,11 @@ def index():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+
+    if 'csrf_token' in session:
+        print('\n\nDEBUG Register BEGIN\n\n', session, session['csrf_token'])
+    else:
+        print('\n\nDEBUG Register BEGIN\n\n', session)
 
     # GET
     if request.method == 'GET':
@@ -230,6 +244,11 @@ def register():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+
+    if 'csrf_token' in session:
+        print('\n\nDEBUG Login BEGIN\n\n', session, session['csrf_token'])
+    else:
+        print('\n\nDEBUG Login BEGIN\n\n', session)
 
     # GET
     if request.method == 'GET':
@@ -1001,6 +1020,11 @@ def remove_dept():
 @app.route('/visualization', methods=['GET', 'POST'])
 @login_required
 def visualization():
+
+    if 'csrf_token' in session:
+        print('\n\nDEBUG PIE CHART BEGIN\n\n', session, session['csrf_token'])
+    else:
+        print('\n\nDEBUG PIE CHART BEGIN\n\n', session)
 
     global pie_chart
 
