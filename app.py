@@ -15,6 +15,11 @@ import seaborn as sns
 
 app = Flask(__name__)
 
+# Configure session
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
+
 # Configure CSRF
 csrf = CSRFProtect(app)
 csrf.init_app(app)
@@ -26,11 +31,6 @@ if 'SECRET_KEY' not in app.config:
 # Generate a random WTF_CSRF_SECRET_KEY
 if 'WTF_CSRF_SECRET_KEY' not in app.config:
     app.config['WTF_CSRF_SECRET_KEY'] = os.urandom(24).hex()
-
-# Configure session
-app.config['SESSION_PERMANENT'] = False
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
 
 # Configure e-mail
 app.config['MAIL_DEFAULT_SENDER'] = 'staffrecordsdatabase@gmail.com'
