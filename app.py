@@ -42,6 +42,9 @@ app.config['MAIL_USE_TLS'] = True # Use encryption
 app.config['MAIL_USE_SSL'] = False
 mail = Mail(app)
 
+if 'csrf_token' not in session:
+    session['csrf_token'] = app.config['WTF_CSRF_SECRET_KEY']
+
 
 class Results():
     def __init__(self, department, sort_by, num_of_results, asc_desc):
