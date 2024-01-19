@@ -1,3 +1,4 @@
+
 function togglePasswordConfirmationText() {
   console.log(document.querySelector('.password-input'));
   const passwordInputs = document.querySelectorAll('.password-input');

@@ -1,0 +1,25 @@
+1.19.24
+
+    Views Changed (to form=Form() in app.py and form.hidden_tag() in .html):
+        - /register DONE
+        - /login DONE
+        - /password_reset DONE
+        - /add_new_staff DONE
+        - /department DONE
+
+    TO DO:
+        - Change salary to currensy field in /add_new_client DONE
+        - Default start date is todays date DONE
+
+        - Pie chart:
+            - toggle sum/mean DONE
+            - toggle button text DONE
+
+        - Add alert to index page telling user to change database
+
+        - Add Profile page
+            - include change password
+
+        - Add staff to database
+
+        -  /password_reset does not currently have same password requirements as /register

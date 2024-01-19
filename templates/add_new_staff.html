@@ -16,23 +16,25 @@
         <h2>Add New Staff Member</h2>
 
         <label class="form-label top">First Name</label><br>
-        <input name="first_name" type="text" placeholder="First Name" autofocus autocomplete="off" class="form_class"><br>
+        <input name="first_name" type="text" placeholder="First Name" autofocus autocomplete="off" class="form_class" title="Please Enter First Name" required><br>
         <label class="form-label top">Last Name</label><br>
-        <input name="last_name" type="text" placeholder="Last Name" autofocus autocomplete="off" class="form_class"><br>
+        <input name="last_name" type="text" placeholder="Last Name" autofocus autocomplete="off" class="form_class" title="Please Enter Last Name" required><br>
         <label class="form-label top">Department</label><br>
-        <select name="department">
+        <select name="department" title="Please select department from drop-down list" required>
             <option disabled selected>Select Department</option>
             {% for department in departments %}
                 <option value="{{ department }}">{{ department }}</option>
             {% endfor %}
         </select><br>
         <label class="form-label top">Title</label><br>
-        <input name="title" type="text" placeholder="Title" autocomplete="off" class="form_class"><br>
+        <input name="title" type="text" placeholder="Title" autocomplete="off" class="form_class" title="Please Enter Title/Position" required><br>
         <label class="form-label top">Salary</label><br>
-        <input name="salary" type="number" placeholder="Salary" min="0" step=".01" class="form_class"><br>
+        <!-- <input name="salary" type="number" placeholder="Salary" min="0" step=".01" class="form_class"><br> -->
+        <input type="text" name="salary" placeholder="$0.00" pattern="^\d+(\.\d{1,2})?$" title="Enter a valid currency amount" required><br>
         <label class="form-label top">Start Date</label><br>
-        <input name="start_date" type="date" placeholder="Start Date" autocomplete="off" class="form_class"><br>
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input value="{{ today }}" name="start_date" type="date" placeholder="Start Date" autocomplete="off" class="form_class" title="Please Select Start Date" required><br>
+        {{ form.hidden_tag() }}
+        <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> -->
         <button class="btn btn-primary top" type="submit" class="form_class">Add Staff Member</button>
 
     </form>

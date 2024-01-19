@@ -55,7 +55,8 @@
                 {% endfor %}
             </select>
             <br>
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {{ form.hidden_tag() }}
+            <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> -->
             <button type="submit" class="btn btn-primary top">Select Department</button>
         </form>
     </div>
@@ -71,7 +72,8 @@
                 <form action="/csv_export" method="post">
                     <div style="float: right">
                         <input type="email" name="email" placeholder="Enter E-mail to receive CSV" required autocomplete="off">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        {{ form.hidden_tag() }}
+                        <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> -->
                         <button class="btn btn-secondary" style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .1rem; --bs-btn-font-size: .76rem; margin-right: 10px; margin-bottom: 5px;">E-Mail as CSV <img src="static/images/mail-offwhite.svg" style="margin-bottom: 3px;"></button>
                     </div>
                 </form>
@@ -80,7 +82,8 @@
                 <form action="/csv_export" method="post">
                     <div style="float: right">
                         <input name="download_csv" type="hidden" value="True">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        {{ form.hidden_tag() }}
+                        <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> -->
                         <button class="btn btn-secondary" style="--bs-btn-padding-y: .10rem; --bs-btn-padding-x: .1rem; --bs-btn-font-size: .73rem; margin-right: 10px; margin-top: 3px;">Download CSV <img src="static/images/download.svg" style="margin-bottom: 3px;"></button>
                     </div>
                 </form>
@@ -110,7 +113,8 @@
                     <form action="/departments" method="post">
                         <th>{{column}}
                             <input name="resort_by" type="hidden" value="{{ column }}">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            {{ form.hidden_tag() }}
+                            <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> -->
                             <button name="asc_desc" value="ascending" class="btn btn-light" style="--bs-btn-padding-y: .005rem; --bs-btn-padding-x: .05rem; --bs-btn-font-size: .75rem; margin-bottom:5px">&#8593</button><button name="asc_desc" value="descending" class="btn btn-light" style="--bs-btn-padding-y: .005rem; --bs-btn-padding-x: .05rem; --bs-btn-font-size: .75rem; margin-bottom:5px">&#8595</button>
                         </th>
                     </form>

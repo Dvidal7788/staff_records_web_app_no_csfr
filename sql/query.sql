@@ -184,3 +184,25 @@
 
 -- INSERT INTO manager
 
+-- SELECT * FROM users;
+-- DELETE FROM users;
+
+
+-- Confirming pie chart
+SELECT AVG(salary) as avg_salary, department FROM staff
+JOIN salary on staff.emp_id = salary.emp_id
+GROUP BY department;
+
+
+-- AS PERCENTAGE
+WITH avg_sal AS (
+
+    SELECT AVG(salary) as avg_salary, department FROM staff
+    JOIN salary on staff.emp_id = salary.emp_id
+    GROUP BY department
+
+)
+
+SELECT avg_salary/(SELECT SUM(avg_salary) FROM avg_sal), department FROM avg_sal;
+
+-- SELECT SUM(salary) FROM salary;

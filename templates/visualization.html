@@ -4,17 +4,26 @@
 
 {% block main %}
 
-    <!-- TOGGLE Value/Percentage BUTTON -->
+    <!-- TOGGLE BUTTONS -->
     <div class="centered">
-        <form action="/pie_chart_toggle_percentage" method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" class="btn btn-primary top">Toggle Dollars/Percentages</button>
+        <form action="/pie_chart_toggle" method="post">
+            <input type="hidden" name="toggle" value="sum_mean">
+            {{ form.hidden_tag() }}
+            <button id="sum_mean_btn" type="submit" class="btn btn-primary top">Change to {{ pie_chart.sum_mean }}</button>
+        </form>
+    </div>
+
+    <div class="centered">
+        <form action="/pie_chart_toggle" method="post">
+            <input type="hidden" name="toggle" value="percentage_value">
+            {{ form.hidden_tag() }}
+            <button type="submit" class="btn btn-primary top">Change to {{ pie_chart.percentage_value }}</button>
         </form>
     </div>
 
     <!-- PIE CHART -->
     <div class="centered top">
-        <img id="pie_chart" alt="pie chart (sum salaries per department)" src="static/graphs/plot.png">
+        <img id="pie_chart" alt="pie chart (sum salaries per department)" src="{{ pie_chart.file_path }}">
     </div>
 
 

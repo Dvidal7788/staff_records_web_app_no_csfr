@@ -1,11 +1,11 @@
 from flask import Flask, render_template, redirect, request, session
 from flask_session import Session
 from flask_mail import Mail, Message
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf import CSRFProtect, FlaskForm
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
 import sqlite3
-from datetime import datetime
+from datetime import datetime, date
 import os
 import re
 import pandas as pd
@@ -27,7 +27,7 @@ if 'SECRET_KEY' not in app.config:
 # Generate a random WTF_CSRF_SECRET_KEY
 if 'WTF_CSRF_SECRET_KEY' not in app.config:
     app.config['WTF_CSRF_SECRET_KEY'] = os.urandom(24).hex()
-    
+
 # Configure CSRF
 csrf = CSRFProtect(app)
 csrf.init_app(app)
@@ -43,7 +43,7 @@ app.config['MAIL_USE_SSL'] = False
 mail = Mail(app)
 
 
-
+# Class Definitions
 class Results():
     def __init__(self, department, sort_by, num_of_results, asc_desc):
         self.department = department
@@ -78,10 +78,17 @@ class RemoveStaff():
 class PieChart():
 
     def __init__(self):
-        self.sum_mean = 'sum'
-        self.percentage = True
+        self.sum = True
+        self.percentage = False
         self.redirect = False
+        self.joined_df = []
+        self.file_path = ''
         return
+
+
+# This will only be used for {{ form.hidden_tag() }}, as the {{ csrf_token() }} syntax seems to have bugs
+class Form(FlaskForm):
+    pass
 
 
 # Globals
@@ -103,12 +110,19 @@ pie_chart = PieChart()
 
 
 
-# Retrieve up to date staff column names
 db = sqlite3.connect("sql/staff.db")
+# Retrieve up to date staff column names
 tmp_cursor = db.execute("SELECT name FROM PRAGMA_TABLE_INFO('staff')")
 staff_columns = []
 for tmp_tuple in tmp_cursor:
     staff_columns.append(tmp_tuple[0])
+
+# Retrieve up to date salary column names
+tmp_cursor = db.execute("SELECT name FROM PRAGMA_TABLE_INFO('salary')")
+salary_columns = []
+for tmp_tuple in tmp_cursor:
+    salary_columns.append(tmp_tuple[0])
+
 
 reasons_for_leaving = ['terminated', 'quit', 'retired', 'layed off', 'other']
 security_questions = ["What is your mother's maiden name?", "In which city were you born?", "What is the name of your first crush?", "What is the name of your first pet?", "What is the name of your childhood best friend?", "What was the make and model of your first car?"]
@@ -149,7 +163,7 @@ def index():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    
+
     print('\n\nDEBUG Register BEGIN\n', session)
     print('\n\nDEBUG Register BEGIN\n', request.form)
     print('\n\nDEBUG Register app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
@@ -157,10 +171,10 @@ def register():
     # Don't register if already logged in
     if 'user_id' in session:
         return redirect('/')
-    
+
     # GET
     if request.method == 'GET':
-        return render_template('register.html', security_questions=security_questions)
+        return render_template('register.html', security_questions=security_questions, form=Form())
 
     # POST
     else:
@@ -266,13 +280,18 @@ def login():
         global password_reset_successful
 
         if registration_success:
-            registration_success = False
-            return render_template('login.html', registration_success=True)
-        elif password_reset_successful:
-            password_reset_successful = False
-            return render_template('login.html', password_reset_successful=True)
 
-        return render_template('login.html', registration_success=False)
+            # Reset bool to default
+            registration_success = False
+            return render_template('login.html', registration_success=True, form=Form())
+
+        elif password_reset_successful:
+
+            # Reset bool to default
+            password_reset_successful = False
+            return render_template('login.html', password_reset_successful=True, form=Form())
+
+        return render_template('login.html', registration_success=False, form=Form())
 
 
     # POST
@@ -327,7 +346,7 @@ def password_reset():
 
     # GET
     if request.method == 'GET':
-        return render_template("/password_reset.html", security_questions=security_questions)
+        return render_template("/password_reset.html", security_questions=security_questions, form=Form())
 
     # POST
     else:
@@ -341,10 +360,10 @@ def password_reset():
             tmp_cursor = db.execute("SELECT security_question FROM users WHERE username = ?", (username,))
             for tmp_tuple in tmp_cursor:
                 # Display Page 2
-                return render_template("/password_reset.html", security_question=tmp_tuple[0], show_page2=True)
+                return render_template("/password_reset.html", security_question=tmp_tuple[0], show_page2=True, form=Form())
 
             # Username not found
-            return render_template("/password_reset.html", username_not_found=True)
+            return render_template("/password_reset.html", username_not_found=True, form=Form())
 
         # Check Page 2
         elif request.form.get('security_answer'):
@@ -356,16 +375,16 @@ def password_reset():
 
             if check_password_hash(security_answer_hashed, request.form.get('security_answer')):
                 # Display Page 3
-                return render_template("/password_reset.html", show_page3=True, username=username)
+                return render_template("/password_reset.html", show_page3=True, username=username, form=Form())
             else:
-                return render_template("/password_reset.html", answer_incorrect=True)
+                return render_template("/password_reset.html", answer_incorrect=True, form=Form())
 
         elif request.form.get('new_password') and request.form.get('confirmation'):
             new_password = request.form.get('new_password')
             confirmation = request.form.get('confirmation')
 
             if new_password != confirmation:
-                return render_template("password_reset.html", passwords_did_not_match=True)
+                return render_template("password_reset.html", passwords_did_not_match=True, form=Form())
 
             db = sqlite3.connect("sql/backend.db")
             db.execute("UPDATE users SET pw_hash = ? WHERE username = ?", (generate_password_hash(new_password ,method='pbkdf2:sha512'), username))
@@ -396,9 +415,9 @@ def add_new_staff():
             # Reset staff_added before rendering template
             staff_added = False
 
-            return render_template('add_new_staff.html', departments=departments, staff_added=True, username=session['username'])
+            return render_template('add_new_staff.html', departments=departments, staff_added=True, username=session['username'], today=date.today(), form=Form())
         else:
-            return render_template('add_new_staff.html', departments=departments, staff_added=False, username=session['username'])
+            return render_template('add_new_staff.html', departments=departments, staff_added=False, username=session['username'], today=date.today(), form=Form())
 
 
     # POST
@@ -469,9 +488,9 @@ def departments():
     if request.method == 'GET' and not departments_all:
         if email_sent:
             email_sent = False
-            return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, username=session['username'], email_sent=True, display_results=True)
+            return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, username=session['username'], email_sent=True, display_results=True, form=Form())
         else:
-            return render_template('departments.html', departments=departments, columns=columns, landing_page=True, username=session['username'], email_sent=False)
+            return render_template('departments.html', departments=departments, columns=columns, landing_page=True, username=session['username'], email_sent=False, form=Form())
 
     # POST
     elif request.method == 'POST' or departments_all:
@@ -489,7 +508,7 @@ def departments():
             else:
                 staff.sort(key=lambda x: x[deformat_str(results.sort_by, True)], reverse=True)
 
-            return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'])
+            return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'], form=Form())
 
 
         # Retreive form
@@ -498,9 +517,9 @@ def departments():
 
         # Validate form
         if sort_by and not department:
-            return render_template('departments.html', departments_blank=True, departments=departments, columns=columns, username=session['username'])
+            return render_template('departments.html', departments_blank=True, departments=departments, columns=columns, username=session['username'], form=Form())
         elif not department and not sort_by and not departments_all:
-            return render_template('departments.html', form_blank=True, departments=departments, columns=columns, username=session['username'])
+            return render_template('departments.html', form_blank=True, departments=departments, columns=columns, username=session['username'], form=Form())
 
         # All
         if departments_all:
@@ -523,7 +542,7 @@ def departments():
         # Results
         results = Results(department, sort_by, len(staff), 'ascending')
 
-        return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'])
+        return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'], form=Form())
 
 
 
@@ -1029,88 +1048,107 @@ def remove_dept():
 @login_required
 def visualization():
 
-    print('\n\nDEBUG PIE CHART BEGIN\n\n', session)
-    print('\n\nDEBUG Pie Chart BEGIN\n\n', request.form)
-
-
     global pie_chart
 
-    #       -- GET --
-    if request.method == 'GET' and not pie_chart.redirect:
-        return render_template('visualization_landing.html')
+    numeric_column = 'salary'
+    categorical_column = 'department'
 
+    pie_chart.sum_mean = 'Mean' if pie_chart.sum else 'Sum'
+    pie_chart.percentage_value = 'Dollar Value' if pie_chart.percentage else 'Percentage'
+
+
+    #           -- GET --
+    if not pie_chart.redirect:
+
+        # Retrieve data from database
+        db = sqlite3.connect('sql/staff.db')
+        tmp_cursor = db.execute('SELECT * FROM staff')
+
+        data = []
+
+        # Each row
+        for tmp_tuple in tmp_cursor:
+
+            # Each value in row
+            row = {}
+            for column, value in zip(staff_columns, tmp_tuple):
+                row[column] = value
+
+            data.append(row)
+
+        staff_df = pd.DataFrame(data)
+
+        tmp_cursor = db.execute('SELECT * FROM salary')
+
+        data = []
+
+        # Each row
+        for tmp_tuple in tmp_cursor:
+
+            # Each value in row
+            row = {}
+            for column, value in zip(salary_columns, tmp_tuple):
+                row[column] = value
+
+            data.append(row)
+
+        salary_df = pd.DataFrame(data)
+
+        # JOIN
+        pie_chart.joined_df = pd.merge(staff_df, salary_df, on='emp_id', how='inner')
+
+        print('\n\nNOT REDIRECT', pie_chart.sum, pie_chart.percentage,'\n\n')
+        # Group joined_df and create pie chart
+        create_pie_chart(numeric_column, categorical_column, pie_chart)
+
+        return render_template('visualization.html', pie_chart=pie_chart, form=Form())
+
+
+    #           --- POST ---
+
+    # Reset bool to default
     pie_chart.redirect = False
-    #       -- POST --
+
+    print('\n\nREDIRECT', pie_chart.sum, pie_chart.percentage,'\n\n')
+
+    # Group joined_df and create pie chart
+    create_pie_chart(numeric_column, categorical_column, pie_chart)
+
+    return render_template('visualization.html', pie_chart=pie_chart, form=Form())
+
+
+
+def create_pie_chart(numeric_column, categorical_column, pie_chart):
+
+    # Group joined_df by categorical column
+    if pie_chart.sum:
+        print('GROUP SUM\n')
+        grouped = pie_chart.joined_df[[numeric_column, categorical_column]].groupby([categorical_column], as_index=False).sum()
+    else:
+        print('GROUP MEAN\n')
+        grouped = pie_chart.joined_df[[numeric_column, categorical_column]].groupby([categorical_column], as_index=False).mean()
 
     # File path of chart
-    file_path = 'static/graphs/plot.png'
+    file_path = f'static/graphs/{numeric_column}_{categorical_column}_pie_chart.png'
+    pie_chart.file_path = file_path
 
     # Legend file path
     dot_index = file_path.find('.')
     legend_file_path = f'{file_path[:dot_index]}_legend.png'
 
-    # Retrieve data from database
-    db = sqlite3.connect('sql/staff.db')
-    tmp_cursor = db.execute('SELECT * FROM staff')
-
-    data = []
-
-    # Each row
-    for tmp_tuple in tmp_cursor:
-
-        # Each value in row
-        row = {}
-        for column, value in zip(staff_columns, tmp_tuple):
-            row[column] = value
-
-        data.append(row)
-
-    staff_df = pd.DataFrame(data)
-
-    tmp_cursor = db.execute('SELECT * FROM salary')
-
-    data = []
-    salary_columns = ['emp_id', 'salary']
-
-    # Each row
-    for tmp_tuple in tmp_cursor:
-
-        # Each value in row
-        row = {}
-        for column, value in zip(salary_columns, tmp_tuple):
-            row[column] = value
-
-        data.append(row)
-
-    salary_df = pd.DataFrame(data)
-
-    # JOIN
-    joined_df = pd.merge(staff_df, salary_df, on='emp_id', how='inner')
-
-
-    # Group by department
-    if request.form.get('sum_mean') is not None:
-        pie_chart.decision = True
-        pie_chart.sum_mean = request.form.get('sum_mean')
-
-    if pie_chart.sum_mean == 'sum':
-        grouped = joined_df[['salary', 'department']].groupby(['department'], as_index=False).sum()
-    else:
-        grouped = joined_df[['salary', 'department']].groupby(['department'], as_index=False).mean()
-
     # Create a pie chart
     plt.figure(figsize=(8,6))
 
     if pie_chart.percentage:
-        plt.pie(grouped['salary'], labels=format_list(list(grouped['department'])), autopct='%1.1f%%', startangle=90)
+        plt.pie(grouped[numeric_column], labels=format_list(list(grouped[categorical_column])), autopct='%1.1f%%', startangle=90)
     else:
-        plt.pie(grouped['salary'], labels=format_list(list(grouped['department'])), autopct=lambda p: '${:,.0f}'.format(p * sum(grouped['salary']) / 100, p), pctdistance=.8, startangle=90)
+        plt.pie(grouped[numeric_column], labels=format_list(list(grouped[categorical_column])), autopct=lambda p: '${:,.0f}'.format(p * sum(grouped['salary']) / 100, p), pctdistance=.8, startangle=90)
         # plt.pie(grouped['salary'], labels=format_list(list(grouped['department'])), autopct=lambda p: '${:,.0f}\n({:.1f}%)'.format(p * sum(grouped['salary']) / 100, p), pctdistance=.8, startangle=90)
 
     # Equal aspect ratio ensures that pie is drawn as a circle.
     plt.axis('equal')
 
-    plt.title('Total Salary per Department', y=1.065) if pie_chart.sum_mean == 'sum' else plt.title('Average Salary per Department', y=1.065)
+    plt.title(f'Total (SUM) {numeric_column.title()} per {categorical_column.title()}', y=1.065) if pie_chart.sum else plt.title(f'Average (MEAN) {numeric_column.title()} per {categorical_column.title()}', y=1.065)
 
 
     # salary_with_dollarsign = [usd(sal, True) for sal in grouped['salary']]
@@ -1131,21 +1169,27 @@ def visualization():
     plt.savefig(file_path)
     # legend.savefig(legend_file_path)
 
-    return render_template('visualization.html')
 
 
-
-@app.route('/pie_chart_toggle_percentage', methods=['POST'])
+@app.route('/pie_chart_toggle', methods=['POST'])
 @login_required
-def pie_chart_toggle_percentage():
+def pie_chart_toggle():
 
     global pie_chart
-    pie_chart.decision = True
 
-    pie_chart.percentage = not pie_chart.percentage
+    # Toggle between sum/mean
+    if request.form.get('toggle') == 'sum_mean':
+        pie_chart.sum = not pie_chart.sum
+
+    # Toggle between percentage/value
+    else:
+        pie_chart.percentage = not pie_chart.percentage
+
     pie_chart.redirect = True
 
     return redirect('/visualization')
+
+
 
 
 

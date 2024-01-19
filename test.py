@@ -65,7 +65,7 @@
 #     print(item[0])
 
 
-# from datetime import datetime
+# from datetime import datetime, date
 
 # now = datetime.now()
 # print(now)
@@ -78,3 +78,16 @@
 #     print('valid')
 # else:
 #     print('invalid')
+
+
+# today = date.today()
+# print(today)
+
+
+class myClass():
+    def __init__(self):
+        self.x = 4
+
+my = myClass()
+my.y = 8
+print(my.x, my.y)
