@@ -174,7 +174,7 @@ def register():
 
     # GET
     if request.method == 'GET':
-        return render_template('register.html', security_questions=security_questions, form=Form())
+        return render_template('register.html', security_questions=security_questions)
 
     # POST
     else:
@@ -283,15 +283,15 @@ def login():
 
             # Reset bool to default
             registration_success = False
-            return render_template('login.html', registration_success=True, form=Form())
+            return render_template('login.html', registration_success=True)
 
         elif password_reset_successful:
 
             # Reset bool to default
             password_reset_successful = False
-            return render_template('login.html', password_reset_successful=True, form=Form())
+            return render_template('login.html', password_reset_successful=True)
 
-        return render_template('login.html', registration_success=False, form=Form())
+        return render_template('login.html', registration_success=False)
 
 
     # POST
@@ -346,7 +346,7 @@ def password_reset():
 
     # GET
     if request.method == 'GET':
-        return render_template("/password_reset.html", security_questions=security_questions, form=Form())
+        return render_template("/password_reset.html", security_questions=security_questions)
 
     # POST
     else:
@@ -360,10 +360,10 @@ def password_reset():
             tmp_cursor = db.execute("SELECT security_question FROM users WHERE username = ?", (username,))
             for tmp_tuple in tmp_cursor:
                 # Display Page 2
-                return render_template("/password_reset.html", security_question=tmp_tuple[0], show_page2=True, form=Form())
+                return render_template("/password_reset.html", security_question=tmp_tuple[0], show_page2=True)
 
             # Username not found
-            return render_template("/password_reset.html", username_not_found=True, form=Form())
+            return render_template("/password_reset.html", username_not_found=True)
 
         # Check Page 2
         elif request.form.get('security_answer'):
@@ -375,16 +375,16 @@ def password_reset():
 
             if check_password_hash(security_answer_hashed, request.form.get('security_answer')):
                 # Display Page 3
-                return render_template("/password_reset.html", show_page3=True, username=username, form=Form())
+                return render_template("/password_reset.html", show_page3=True, username=username)
             else:
-                return render_template("/password_reset.html", answer_incorrect=True, form=Form())
+                return render_template("/password_reset.html", answer_incorrect=True)
 
         elif request.form.get('new_password') and request.form.get('confirmation'):
             new_password = request.form.get('new_password')
             confirmation = request.form.get('confirmation')
 
             if new_password != confirmation:
-                return render_template("password_reset.html", passwords_did_not_match=True, form=Form())
+                return render_template("password_reset.html", passwords_did_not_match=True)
 
             db = sqlite3.connect("sql/backend.db")
             db.execute("UPDATE users SET pw_hash = ? WHERE username = ?", (generate_password_hash(new_password ,method='pbkdf2:sha512'), username))
@@ -415,9 +415,9 @@ def add_new_staff():
             # Reset staff_added before rendering template
             staff_added = False
 
-            return render_template('add_new_staff.html', departments=departments, staff_added=True, username=session['username'], today=date.today(), form=Form())
+            return render_template('add_new_staff.html', departments=departments, staff_added=True, username=session['username'], today=date.today())
         else:
-            return render_template('add_new_staff.html', departments=departments, staff_added=False, username=session['username'], today=date.today(), form=Form())
+            return render_template('add_new_staff.html', departments=departments, staff_added=False, username=session['username'], today=date.today())
 
 
     # POST
@@ -488,9 +488,9 @@ def departments():
     if request.method == 'GET' and not departments_all:
         if email_sent:
             email_sent = False
-            return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, username=session['username'], email_sent=True, display_results=True, form=Form())
+            return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, username=session['username'], email_sent=True, display_results=True)
         else:
-            return render_template('departments.html', departments=departments, columns=columns, landing_page=True, username=session['username'], email_sent=False, form=Form())
+            return render_template('departments.html', departments=departments, columns=columns, landing_page=True, username=session['username'], email_sent=False)
 
     # POST
     elif request.method == 'POST' or departments_all:
@@ -508,7 +508,7 @@ def departments():
             else:
                 staff.sort(key=lambda x: x[deformat_str(results.sort_by, True)], reverse=True)
 
-            return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'], form=Form())
+            return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'])
 
 
         # Retreive form
@@ -517,9 +517,9 @@ def departments():
 
         # Validate form
         if sort_by and not department:
-            return render_template('departments.html', departments_blank=True, departments=departments, columns=columns, username=session['username'], form=Form())
+            return render_template('departments.html', departments_blank=True, departments=departments, columns=columns, username=session['username'])
         elif not department and not sort_by and not departments_all:
-            return render_template('departments.html', form_blank=True, departments=departments, columns=columns, username=session['username'], form=Form())
+            return render_template('departments.html', form_blank=True, departments=departments, columns=columns, username=session['username'])
 
         # All
         if departments_all:
@@ -542,7 +542,7 @@ def departments():
         # Results
         results = Results(department, sort_by, len(staff), 'ascending')
 
-        return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'], form=Form())
+        return render_template('departments.html', departments=departments, columns=columns, staff=staff, results=results, display_results=True, username=session['username'])
 
 
 
@@ -1101,7 +1101,7 @@ def visualization():
         # Group joined_df and create pie chart
         create_pie_chart(numeric_column, categorical_column, pie_chart)
 
-        return render_template('visualization.html', pie_chart=pie_chart, form=Form())
+        return render_template('visualization.html', pie_chart=pie_chart)
 
 
     #           --- POST ---
@@ -1114,7 +1114,7 @@ def visualization():
     # Group joined_df and create pie chart
     create_pie_chart(numeric_column, categorical_column, pie_chart)
 
-    return render_template('visualization.html', pie_chart=pie_chart, form=Form())
+    return render_template('visualization.html', pie_chart=pie_chart)
 
 
 
