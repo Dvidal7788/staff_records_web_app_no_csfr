@@ -148,9 +148,9 @@ def login_required(f):
 @app.route("/")
 def index():
 
-    print('\n\nDEBUG Index Session:\n', session)
-    print('\n\nDEBUG Index Request:\n', request.form)
-    print('\n\nDEBUG Index app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
+    # print('\n\nDEBUG Index Session:\n', session)
+    # print('\n\nDEBUG Index Request:\n', request.form)
+    # print('\n\nDEBUG Index app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
 
     if not 'username' in session:
         # if not 'csrf_token' in session:
@@ -164,9 +164,9 @@ def index():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
 
-    print('\n\nDEBUG Register BEGIN\n', session)
-    print('\n\nDEBUG Register BEGIN\n', request.form)
-    print('\n\nDEBUG Register app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
+    # print('\n\nDEBUG Register BEGIN\n', session)
+    # print('\n\nDEBUG Register BEGIN\n', request.form)
+    # print('\n\nDEBUG Register app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
 
     # Don't register if already logged in
     if 'user_id' in session:
@@ -264,9 +264,9 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
 
-    print('\n\nDEBUG Login BEGIN\n', session)
-    print('\n\nDEBUG Login BEGIN\n', request.form)
-    print('\n\nDEBUG Login app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
+    # print('\n\nDEBUG Login BEGIN\n', session)
+    # print('\n\nDEBUG Login BEGIN\n', request.form)
+    # print('\n\nDEBUG Login app.config["WTF_CSRF_SECRET_KEY"]:\n\n', app.config['WTF_CSRF_SECRET_KEY'])
 
     # Don't log in if already logged in
     if 'user_id' in session:
@@ -1097,7 +1097,7 @@ def visualization():
         # JOIN
         pie_chart.joined_df = pd.merge(staff_df, salary_df, on='emp_id', how='inner')
 
-        print('\n\nNOT REDIRECT', pie_chart.sum, pie_chart.percentage,'\n\n')
+        # print('\n\nNOT REDIRECT', pie_chart.sum, pie_chart.percentage,'\n\n')
         # Group joined_df and create pie chart
         create_pie_chart(numeric_column, categorical_column, pie_chart)
 
@@ -1109,7 +1109,7 @@ def visualization():
     # Reset bool to default
     pie_chart.redirect = False
 
-    print('\n\nREDIRECT', pie_chart.sum, pie_chart.percentage,'\n\n')
+    # print('\n\nREDIRECT', pie_chart.sum, pie_chart.percentage,'\n\n')
 
     # Group joined_df and create pie chart
     create_pie_chart(numeric_column, categorical_column, pie_chart)
@@ -1122,10 +1122,10 @@ def create_pie_chart(numeric_column, categorical_column, pie_chart):
 
     # Group joined_df by categorical column
     if pie_chart.sum:
-        print('GROUP SUM\n')
+        # print('GROUP SUM\n')
         grouped = pie_chart.joined_df[[numeric_column, categorical_column]].groupby([categorical_column], as_index=False).sum()
     else:
-        print('GROUP MEAN\n')
+        # print('GROUP MEAN\n')
         grouped = pie_chart.joined_df[[numeric_column, categorical_column]].groupby([categorical_column], as_index=False).mean()
 
     # File path of chart
