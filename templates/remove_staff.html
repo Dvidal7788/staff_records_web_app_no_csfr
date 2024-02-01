@@ -23,7 +23,7 @@
                 <label class="form-label">Enter PIN for access</label><br>
                 <input name="manager_pin" type="password" pattern="[0-9]{4}" maxlength="4"><br>
                 <input type="hidden" name="check_page1" value="True">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> -->
                 <button class="btn btn-primary" type="submit" class="form_class" style="margin-top: 20px;">Get Access</button>
             </div>
 
