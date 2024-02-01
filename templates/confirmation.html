@@ -14,7 +14,7 @@
     {% if confirm_edit_staff %}
 
         <form class="centered top" action="/edit_staff" method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> -->
             <button name="confirm_edit" class="btn btn-danger" type="submit" value="no">No</button>
             <button name="confirm_edit" class="btn btn-success" type="submit" value="yes" >Yes</button>
         </form>
