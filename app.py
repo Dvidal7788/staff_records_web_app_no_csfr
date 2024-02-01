@@ -86,9 +86,9 @@ class PieChart():
         return
 
 
-# This will only be used for {{ form.hidden_tag() }}, as the {{ csrf_token() }} syntax seems to have bugs
-class Form(FlaskForm):
-    pass
+# # This will only be used for {{ form.hidden_tag() }}, as the {{ csrf_token() }} syntax seems to have bugs
+# class Form(FlaskForm):
+#     pass
 
 
 # Globals
