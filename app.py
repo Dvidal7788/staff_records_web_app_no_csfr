@@ -18,6 +18,7 @@ app = Flask(__name__)
 # Configure session
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_TYPE'] = 'filesystem'
+# app.config['SESSION_USE_SIGNER'] = True
 Session(app)
 
 # # Generate a random SECRET_KEY
@@ -1097,7 +1098,7 @@ def visualization():
         # JOIN
         pie_chart.joined_df = pd.merge(staff_df, salary_df, on='emp_id', how='inner')
 
-        # print('\n\nNOT REDIRECT', pie_chart.sum, pie_chart.percentage,'\n\n')
+        print('\n\nNOT REDIRECT', pie_chart.sum, pie_chart.percentage,'\n\n')
         # Group joined_df and create pie chart
         create_pie_chart(numeric_column, categorical_column, pie_chart)
 
@@ -1109,7 +1110,7 @@ def visualization():
     # Reset bool to default
     pie_chart.redirect = False
 
-    # print('\n\nREDIRECT', pie_chart.sum, pie_chart.percentage,'\n\n')
+    print('\n\nREDIRECT', pie_chart.sum, pie_chart.percentage,'\n\n')
 
     # Group joined_df and create pie chart
     create_pie_chart(numeric_column, categorical_column, pie_chart)
@@ -1122,10 +1123,10 @@ def create_pie_chart(numeric_column, categorical_column, pie_chart):
 
     # Group joined_df by categorical column
     if pie_chart.sum:
-        # print('GROUP SUM\n')
+        print('GROUP SUM\n')
         grouped = pie_chart.joined_df[[numeric_column, categorical_column]].groupby([categorical_column], as_index=False).sum()
     else:
-        # print('GROUP MEAN\n')
+        print('GROUP MEAN\n')
         grouped = pie_chart.joined_df[[numeric_column, categorical_column]].groupby([categorical_column], as_index=False).mean()
 
     # File path of chart
