@@ -82,7 +82,7 @@ class PieChart():
         self.sum = True
         self.percentage = False
         self.redirect = False
-        self.joined_df = []
+        self.joined_df = pd.DataFrame()
         self.file_path = ''
         return
 
